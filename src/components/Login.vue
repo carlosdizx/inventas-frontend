@@ -1,17 +1,17 @@
 <template>
-	<v-app class="mt-12">
-		<v-card class="mt-5 mx-auto">
-			<v-card-title>
-				<v-img
-					src="@/assets/logo.png"
-					max-height="210"
-					max-width="210"
-					alt="logo"
-					class="mx-auto"
-				/>
-			</v-card-title>
-			<v-card-text>
-				<validation-observer ref="observer" v-slot="{ invalid }">
+	<validation-observer ref="observer" v-slot="{ invalid }">
+		<v-app class="mt-12">
+			<v-card class="mt-5 mx-auto">
+				<v-card-title>
+					<img
+						src="../assets/logo.png"
+						height="200"
+						width="245"
+						alt="logo"
+						class="mx-auto"
+					/>
+				</v-card-title>
+				<v-card-text>
 					<v-form @submit.prevent="submit">
 						<validation-provider v-slot="{ errors }" name="email" rules="required">
 							<v-text-field
@@ -43,27 +43,21 @@
 							</v-text-field>
 						</validation-provider>
 					</v-form>
-					<v-btn
-						@click="submit"
-						role="link"
-						color="info"
-						type="submit"
-						:disabled="invalid"
-						>Iniciar sesion</v-btn
-					>
-					<router-link to="/forms" v-slot="{ navigate }" custom>
+					<v-card-actions>
 						<v-btn
-							@click="navigate"
-							@keypress.enter="navigate"
+							block
+							@click="submit"
 							role="link"
-							color="success"
-							>Registrarme</v-btn
-						>
-					</router-link>
-				</validation-observer>
-			</v-card-text>
-		</v-card>
-	</v-app>
+							color="info"
+							type="submit"
+							:disabled="invalid"
+							>Iniciar sesion
+						</v-btn>
+					</v-card-actions>
+				</v-card-text>
+			</v-card>
+		</v-app>
+	</validation-observer>
 </template>
 
 <script>
