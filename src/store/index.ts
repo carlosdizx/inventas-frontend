@@ -3,8 +3,7 @@ import Vuex, { Commit } from 'vuex';
 import { LOGUEAR } from '@/servicios/auth';
 import router from '@/router';
 import { LISTAR_CLIENTES } from '@/servicios/recursos';
-import Swal from 'sweetalert2'
-
+import Swal from 'sweetalert2';
 
 Vue.use(Vuex);
 
@@ -25,14 +24,6 @@ export default new Vuex.Store({
 					);
 					commit('ASIGNAR_USUARIO', usuario);
 					localStorage.setItem('token', JSON.stringify(respuesta.data));
-					Swal.fire({
-						position: 'center',
-						icon: 'success',
-						title: 'Bienvenido 😎',
-						html:`${usuario.info}`,
-						showConfirmButton: false,
-						timer: 1500
-					})
 					router.push('/');
 				})
 				.catch((error) => console.log(error));
@@ -43,7 +34,13 @@ export default new Vuex.Store({
 			if (token !== null) {
 				usuario = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
 				commit('ASIGNAR_USUARIO', usuario);
-				//await router.push('/registro');
+				await Swal.fire({
+					position: 'center',
+					icon: 'success',
+					title: 'Bienvenido 😎',
+					showConfirmButton: false,
+					timer: 1800,
+				});
 			}
 			commit('ASIGNAR_USUARIO', usuario);
 		},
@@ -52,7 +49,6 @@ export default new Vuex.Store({
 			if (token !== null) {
 				await LISTAR_CLIENTES(token)
 					.then((respuesta) => {
-						console.log(respuesta);
 						if (respuesta.status === 400) {
 							console.log('Credenciales erroneas!');
 							localStorage.removeItem('token');
