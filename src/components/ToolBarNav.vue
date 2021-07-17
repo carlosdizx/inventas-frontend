@@ -14,7 +14,9 @@
 				v-slot="{ navigate }"
 				custom
 			>
-				<v-tab @click="navigate">{{ tab.texto }} {{ index + 1 }}</v-tab>
+				<v-tab @click="navigate">
+					<v-icon>{{ tab.icono }}</v-icon>
+				</v-tab>
 			</router-link>
 		</v-tabs>
 	</v-card>

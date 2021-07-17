@@ -32,22 +32,13 @@
 		},
 		async created() {
 			this.tabs = [
-				{ link: '/', texto: 'link' },
-				{ link: 'inicio', texto: 'link' },
-				{ link: '/', texto: 'link' },
-				{ link: '/', texto: 'link' },
-				{ link: '/', texto: 'link' },
-				{ link: '/', texto: 'link' },
-				{ link: '/', texto: 'link' },
-				{ link: '/', texto: 'link' },
-				{ link: '/', texto: 'link' },
-				{ link: '/', texto: 'link' },
-				{ link: '/', texto: 'link' },
-				{ link: '/', texto: 'link' },
-				{ link: '/', texto: 'link' },
-				{ link: '/', texto: 'link' },
-				{ link: '/', texto: 'link' },
-				{ link: '/', texto: 'link' },
+				{ link: '/', icono: 'mdi-home' },
+				{ link: '/', icono: 'mdi-cash-register' },
+				{ link: '/', icono: 'mdi-food-variant' },
+				{ link: '/', icono: 'mdi-account-multiple' },
+				{ link: '/', icono: 'mdi-receipt' },
+				{ link: '/', icono: 'mdi-file-document' },
+				{ link: '/', icono: 'mdi-poll' },
 			];
 			await this.cargarUsuario();
 			await this.comprobarToken();
