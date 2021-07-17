@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "dev": "vue-cli-service serve --open",
     "build": "vue-cli-service build"
   },
   "dependencies": {
@@ -24,6 +25,7 @@
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
+    "prettier": "1.19.1",
     "typescript": "~4.1.5",
     "vue-cli-plugin-vuetify": "~2.4.1",
     "vue-template-compiler": "^2.6.11"
