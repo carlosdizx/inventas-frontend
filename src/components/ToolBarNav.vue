@@ -8,10 +8,13 @@
 			prev-icon="mdi-arrow-left-bold-box-outline"
 			show-arrows
 		>
-			<router-link :to="tab.link" v-for="tab in tabs" v-slot="{Navigate}" custom>
-				<v-tab>
-					{{ tab.texto }}
-				</v-tab>
+			<router-link
+				:to="tab.link"
+				v-for="(tab, index) in tabs"
+				v-slot="{ navigate }"
+				custom
+			>
+				<v-tab @click="navigate">{{ tab.texto }} {{ index + 1 }}</v-tab>
 			</router-link>
 		</v-tabs>
 	</v-card>
