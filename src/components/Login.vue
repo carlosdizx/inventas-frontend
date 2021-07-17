@@ -117,9 +117,9 @@
 			showPassword: false,
 		}),
 		methods: {
-			...mapActions(['asignarUsuario', 'cargarUsuario']),
+			...mapActions(['loguearUsuario', 'cargarUsuario']),
 			async submit() {
-				await this.asignarUsuario(this.userTemplate);
+				await this.loguearUsuario(this.userTemplate);
 			},
 		},
 	};

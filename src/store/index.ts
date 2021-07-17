@@ -15,7 +15,7 @@ export default new Vuex.Store({
 			(state.usuario = usuario),
 	},
 	actions: {
-		asignarUsuario: async ({ commit }: { commit: Commit }, usuario: any) => {
+		loguearUsuario: async ({ commit }: { commit: Commit }, usuario: any) => {
 			await LOGUEAR(usuario.username, usuario.password)
 				.then((respuesta) => {
 					const usuario: any = JSON.parse(
@@ -39,15 +39,26 @@ export default new Vuex.Store({
 		},
 		comprobarToken: async ({ commit }) => {
 			const token: any = JSON.parse(<string>localStorage.getItem('token')).access_token;
-			await LISTAR_CLIENTES(token)
-				.then((respuesta) => {
-					if (respuesta.status===400){
-						console.log('Vuelva a iniciar sesion!')
-						localStorage.removeItem('token')
-						commit('ASIGNAR_USUARIO',{})
-					}
-				})
-				.catch((error) => console.log(JSON.stringify(error)));
+			if (token !== null) {
+				await LISTAR_CLIENTES(token)
+					.then((respuesta) => {
+						console.log(respuesta);
+						if (respuesta.status === 400) {
+							console.log('Credenciales erroneas!');
+							localStorage.removeItem('token');
+							commit('ASIGNAR_USUARIO', {});
+						}
+					})
+					.catch((error) => {
+						const mensaje = JSON.parse(JSON.stringify(error)).message;
+						if (mensaje === 'Request failed with status code 401') {
+							localStorage.removeItem('token');
+							commit('ASIGNAR_USUARIO', {});
+							console.log('Vuelve a iniciar sesion!');
+							return;
+						}
+					});
+			}
 		},
 		//------------------------------------------------------------------------------------------------------------
 		//------------------------------------------------- CLIENTES -------------------------------------------------
