@@ -15,7 +15,7 @@ const routes: Array<RouteConfig> = [
 		component: () => import('../views/InicioSesion.vue'),
 	},
 	{
-		path: '/registrousuario',
+		path: '/registro',
 		name: 'RegistroUsuario',
 		component: () => import('../views/RegistroUsuario.vue'),
 	},

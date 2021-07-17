@@ -13,11 +13,11 @@
 			<v-card-text>
 				<validation-observer ref="observer" v-slot="{ invalid }">
 					<v-form @submit.prevent="submit">
-						<validation-provider v-slot="{ errors }" name="email" rules="required|email">
+						<validation-provider v-slot="{ errors }" name="email" rules="required">
 							<v-text-field
-								v-model="userTemplate.email"
+								v-model="userTemplate.username"
 								:error-messages="errors"
-								label="Correo electronico"
+								label="Nombre de usuario"
 								prepend-icon="mdi-account-circle"
 								required
 							>
@@ -43,17 +43,14 @@
 							</v-text-field>
 						</validation-provider>
 					</v-form>
-					<router-link class="mr-5" to="/dashboard" v-slot="{ navigate }" custom>
-						<v-btn
-							@click="navigate"
-							@keypress.enter="navigate"
-							role="link"
-							color="info"
-							type="submit"
-							:disabled="invalid"
-							>Iniciar sesion</v-btn
-						>
-					</router-link>
+					<v-btn
+						@click="submit"
+						role="link"
+						color="info"
+						type="submit"
+						:disabled="invalid"
+						>Iniciar sesion</v-btn
+					>
 					<router-link to="/forms" v-slot="{ navigate }" custom>
 						<v-btn
 							@click="navigate"
@@ -77,6 +74,7 @@
 		ValidationProvider,
 		setInteractionMode,
 	} from 'vee-validate';
+	import { LOGUEAR } from '../servicios/auth';
 
 	setInteractionMode('eager');
 
@@ -113,13 +111,15 @@
 		name: 'Login',
 		data: () => ({
 			userTemplate: {
-				email: '',
+				username: '',
 				password: '',
 			},
 			showPassword: false,
 		}),
 		methods: {
-			submit() {},
+			submit() {
+				LOGUEAR(this.userTemplate.username, this.userTemplate.password);
+			},
 		},
 	};
 </script>
