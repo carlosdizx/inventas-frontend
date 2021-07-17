@@ -74,7 +74,7 @@
 		ValidationProvider,
 		setInteractionMode,
 	} from 'vee-validate';
-	import { LOGUEAR } from '../servicios/auth';
+	import { mapActions } from 'vuex';
 
 	setInteractionMode('eager');
 
@@ -117,8 +117,9 @@
 			showPassword: false,
 		}),
 		methods: {
-			submit() {
-				LOGUEAR(this.userTemplate.username, this.userTemplate.password);
+			...mapActions(['asignarUsuario']),
+			async submit() {
+				await this.asignarUsuario(this.userTemplate);
 			},
 		},
 	};

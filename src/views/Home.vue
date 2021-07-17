@@ -6,13 +6,20 @@
 		<router-link to="registro" v-slot="{ navigate }" custom>
 			<v-btn @click="navigate">Registro</v-btn>
 		</router-link>
+		<br />
+		<hr />
+		{{ usuario }}
 	</div>
 </template>
 
 <script>
 	import Vue from 'vue';
+	import { mapState } from 'vuex';
 
 	export default Vue.extend({
 		name: 'Home',
+		computed: {
+			...mapState(['usuario']),
+		},
 	});
 </script>
