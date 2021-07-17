@@ -3,6 +3,8 @@ import Vuex, { Commit } from 'vuex';
 import { LOGUEAR } from '@/servicios/auth';
 import router from '@/router';
 import { LISTAR_CLIENTES } from '@/servicios/recursos';
+import Swal from 'sweetalert2'
+
 
 Vue.use(Vuex);
 
@@ -23,6 +25,14 @@ export default new Vuex.Store({
 					);
 					commit('ASIGNAR_USUARIO', usuario);
 					localStorage.setItem('token', JSON.stringify(respuesta.data));
+					Swal.fire({
+						position: 'center',
+						icon: 'success',
+						title: 'Bienvenido 😎',
+						html:`${usuario.info}`,
+						showConfirmButton: false,
+						timer: 1500
+					})
 					router.push('/');
 				})
 				.catch((error) => console.log(error));
