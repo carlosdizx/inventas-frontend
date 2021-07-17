@@ -14,12 +14,18 @@
 
 <script>
 	import Vue from 'vue';
-	import { mapState } from 'vuex';
+	import { mapState,mapActions } from 'vuex';
 
 	export default Vue.extend({
 		name: 'Home',
 		computed: {
 			...mapState(['usuario']),
 		},
-	});
+    methods:{
+		  ...mapActions(['cargarUsuario'])
+    },
+    created() {
+		  this.cargarUsuario()
+    }
+  });
 </script>

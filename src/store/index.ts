@@ -18,13 +18,23 @@ export default new Vuex.Store({
 			await LOGUEAR(usuario.username, usuario.password)
 				.then((respuesta) => {
 					const usuario: any = JSON.parse(
-                        decodeURIComponent(escape(atob(respuesta.data.access_token.split('.')[1])))
+						decodeURIComponent(escape(atob(respuesta.data.access_token.split('.')[1])))
 					);
 					commit('ASIGNAR_USUARIO', usuario);
 					localStorage.setItem('token', JSON.stringify(respuesta.data));
 					router.push('/');
 				})
 				.catch((error) => console.log(error));
+		},
+		cargarUsuario: async ({ commit }) => {
+			let token = localStorage.getItem('token');
+			let usuario = {};
+			if (token !== null) {
+				usuario = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
+				commit('ASIGNAR_USUARIO', usuario);
+				//await router.push('/registro');
+			}
+			commit('ASIGNAR_USUARIO', usuario);
 		},
 	},
 	modules: {},
