@@ -1,4 +1,5 @@
 import { CLIENTE } from './axios';
+import router from '@/router';
 
 export const LOGUEAR = async (username: any, password: any) => {
 	const credentials = btoa('inventas' + ':' + '7423102ca');
@@ -18,8 +19,9 @@ export const LOGUEAR = async (username: any, password: any) => {
 		}
 	)
 		.then((respuesta) => {
-			console.log(JSON.stringify(respuesta.data));
-			console.log(respuesta.data);
+			const accessToken : any = JSON.parse(atob(respuesta.data.access_token.split('.')[1]));
+			localStorage.setItem('token', JSON.stringify(respuesta.data));
+			router.push('/');
 		})
 		.catch((error) => console.log(error));
 };
