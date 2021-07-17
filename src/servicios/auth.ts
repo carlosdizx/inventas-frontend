@@ -1,9 +1,8 @@
-import { CLIENTE } from './axios';
-const QUERY_STRING = require('querystring');
+import {AXIOS_INSTANCIA, QUERY_STRING} from './axios';
 const CREDENCIALES = btoa('inventas' + ':' + '7423102ca');
 
 export const LOGUEAR = async (username: any, password: any) =>
-	await CLIENTE.post(
+	await AXIOS_INSTANCIA.post(
 		'oauth/token',
 		QUERY_STRING.stringify({
 			grant_type: 'password',
