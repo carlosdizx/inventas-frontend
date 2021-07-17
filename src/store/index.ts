@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex, { Commit } from 'vuex';
 import { LOGUEAR } from '@/servicios/auth';
 import router from '@/router';
+import { LISTAR_CLIENTES } from '@/servicios/recursos';
 
 Vue.use(Vuex);
 
@@ -27,7 +28,7 @@ export default new Vuex.Store({
 				.catch((error) => console.log(error));
 		},
 		cargarUsuario: async ({ commit }) => {
-			let token = localStorage.getItem('token');
+			const token = localStorage.getItem('token');
 			let usuario = {};
 			if (token !== null) {
 				usuario = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
@@ -35,6 +36,15 @@ export default new Vuex.Store({
 				//await router.push('/registro');
 			}
 			commit('ASIGNAR_USUARIO', usuario);
+		},
+		//------------------------------------------------------------------------------------------------------------
+		//------------------------------------------------- CLIENTES -------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------
+		listarClientes: async ({ commit }) => {
+			const token: any = JSON.parse(<string>localStorage.getItem('token')).access_token;
+			await LISTAR_CLIENTES(token)
+				.then((respuesta) => console.log(respuesta))
+				.catch((error) => console.log(JSON.stringify(error)));
 		},
 	},
 	modules: {},
