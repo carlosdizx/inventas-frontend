@@ -117,13 +117,10 @@
 			showPassword: false,
 		}),
 		methods: {
-			...mapActions(['asignarUsuario', 'cargarUsuario','listarClientes']),
+			...mapActions(['asignarUsuario', 'cargarUsuario']),
 			async submit() {
 				await this.asignarUsuario(this.userTemplate);
 			},
-		},
-		created() {
-		  this.listarClientes();
 		},
 	};
 </script>

@@ -37,10 +37,22 @@ export default new Vuex.Store({
 			}
 			commit('ASIGNAR_USUARIO', usuario);
 		},
+		comprobarToken: async ({ commit }) => {
+			const token: any = JSON.parse(<string>localStorage.getItem('token')).access_token;
+			await LISTAR_CLIENTES(token)
+				.then((respuesta) => {
+					if (respuesta.status===400){
+						console.log('Vuelva a iniciar sesion!')
+						localStorage.removeItem('token')
+						commit('ASIGNAR_USUARIO',{})
+					}
+				})
+				.catch((error) => console.log(JSON.stringify(error)));
+		},
 		//------------------------------------------------------------------------------------------------------------
 		//------------------------------------------------- CLIENTES -------------------------------------------------
 		//------------------------------------------------------------------------------------------------------------
-		listarClientes: async ({ commit }) => {
+		listarClientes: async () => {
 			const token: any = JSON.parse(<string>localStorage.getItem('token')).access_token;
 			await LISTAR_CLIENTES(token)
 				.then((respuesta) => console.log(respuesta))
