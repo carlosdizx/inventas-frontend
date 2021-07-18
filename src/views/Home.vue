@@ -7,7 +7,12 @@
 		<router-link to="registro" v-slot="{ navigate }" custom>
 			<v-btn block @click="navigate">Registro</v-btn>
 		</router-link>
+		<hr />
+		<hr />
 		{{ usuario }}
+		<hr />
+		<hr />
+		{{ token }}
 	</div>
 </template>
 
@@ -25,10 +30,10 @@
 			tabs: [''],
 		}),
 		computed: {
-			...mapState(['usuario']),
+			...mapState(['usuario', 'token']),
 		},
 		methods: {
-			...mapActions(['comprobarToken', 'cargarUsuario']),
+			...mapActions(['comprobarToken']),
 		},
 		async created() {
 			this.tabs = [
@@ -40,7 +45,6 @@
 				{ link: '/', icono: 'mdi-file-document' },
 				{ link: '/', icono: 'mdi-poll' },
 			];
-			await this.cargarUsuario();
 			await this.comprobarToken();
 		},
 	});

@@ -111,7 +111,7 @@
 			showPassword: false,
 		}),
 		methods: {
-			...mapActions(['loguearUsuario', 'cargarUsuario']),
+			...mapActions(['loguearUsuario', 'cargarDatos']),
 			async submit() {
 				await this.loguearUsuario(this.userTemplate);
 			},
