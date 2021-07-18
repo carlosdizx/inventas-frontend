@@ -1,32 +1,36 @@
 <template>
 	<div>
-		<ToolBarForms :tabs="tabs" />
-		<Tabla :columnas="columnas" :filas="filas" />
+		<ToolBarListados :tabs="tabs" />
+		<Tabla :columnas="columnas_clientes" :filas="clientes" />
 	</div>
 </template>
 
 <script>
-	import ToolBarForms from '../components/forms/ToolBarForms';
+	import ToolBarListados from '../components/listados/ToolBarListados';
 	import Tabla from '../components/general/Tabla';
+	import { mapActions } from 'vuex';
 	export default {
 		name: 'Forms',
 		components: {
-			ToolBarForms,
+			ToolBarListados,
 			Tabla,
 		},
 		data: () => ({
 			tabs: ['mdi-archive', 'mdi-account-outline'],
-			columnas: ['id', 'nombres', 'apellidos', 'celular', 'correo'],
-			filas: [
-				{
-					id: 1,
-					nombres: 'Carlos Ernesto',
-					apellidos: 'Díaz Basante',
-					celular: 3163930876,
-					correo: 'carlodiaz@umariana.edu.co',
-				},
-			],
-		}),
+			columnas_clientes: [],
+      clientes: [],
+    }),
+		methods: {
+			...mapActions(['listarClientes']),
+		},
+		async mounted() {
+			const respuesta = await this.listarClientes();
+			this.clientes = respuesta.data.Mensaje;
+			if(this.clientes.length > 0){
+			  this.columnas_clientes = Object.keys(this.clientes[0]);
+      }
+			console.log(JSON.parse(JSON.stringify(this.clientes)));
+		},
 	};
 </script>
 

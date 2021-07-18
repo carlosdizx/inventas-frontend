@@ -22,15 +22,15 @@
 	</v-card>
 </template>
 
-<script lang="ts">
+<script>
 	export default {
-		name: 'ToolBarForms',
+		name: 'ToolBarListados',
 		data: () => ({
 			index: 1,
 		}),
 		props: { tabs: Array },
 		methods: {
-			cambiarIndex(indice: number) {
+			cambiarIndex(indice) {
 				this.index = indice;
 			},
 		},

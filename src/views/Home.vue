@@ -32,7 +32,7 @@
 		async created() {
 			this.tabs = [
 				{ link: '/', icono: 'mdi-home' },
-				{ link: '/forms', icono: 'mdi-plus-circle-outline' },
+				{ link: '/listados', icono: 'mdi-plus-circle-outline' },
 				{ link: '/', icono: 'mdi-clipboard-list-outline' },
 				{ link: '/', icono: 'mdi-cash-register' },
 				{ link: '/', icono: 'mdi-food-variant' },

@@ -20,7 +20,7 @@ const routes: Array<RouteConfig> = [
 		component: () => import('../views/RegistroUsuario.vue'),
 	},
 	{
-		path: '/forms',
+		path: '/listados',
 		name: 'Forms',
 		component: () => import('../views/Forms.vue'),
 	},

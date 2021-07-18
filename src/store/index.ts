@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Vuex, { Commit } from 'vuex';
+import Vuex, { Commit, createLogger } from 'vuex';
 import { LOGUEAR } from '@/servicios/auth';
 import router from '@/router';
 import { LISTAR_CLIENTES } from '@/servicios/recursos';
@@ -60,30 +60,36 @@ export default new Vuex.Store({
 		comprobarToken: async ({ commit, dispatch, state }) => {
 			if (state.token !== null) {
 				await dispatch('cargarDatos');
-				return await dispatch('listarClientes');
+				return await dispatch('listarClientes', Array());
 			}
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
 			if (token !== null) {
 				await dispatch('cargarDatos');
-				return await dispatch('listarClientes');
+				return await dispatch('listarClientes', Array());
 			}
 			await Swal.fire('Iniciar sesion', 'Vuelve a iniciar sesion 👌', 'info');
 			await router.push('/');
 		},
-		//------------------------------------------------------------------------------------------------------------
-		//------------------------------------------------- CLIENTES -------------------------------------------------
-		//------------------------------------------------------------------------------------------------------------
-		listarClientes: async () => {
+		comprobarValidez: async ({ commit, dispatch }, list: []) => {
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
 			if (token !== null) {
 				await LISTAR_CLIENTES(token.access_token)
-					.then((respuesta) => console.log(respuesta.data.Mensaje))
+					.then((respuesta) => {
+						list = respuesta.data.Mensaje;
+					})
 					.catch((error) => {
 						Swal.fire('Error', `Inicio de sesion cadudcado <br>${error}`, 'error');
 						router.push('/');
 					});
 			}
 		},
+		//------------------------------------------------------------------------------------------------------------
+		//------------------------------------------------- CLIENTES -------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------
+		listarClientes():any{
+			const token: any = JSON.parse(<string>localStorage.getItem('token'));
+			return LISTAR_CLIENTES(token.access_token);
+		}
 	},
 	modules: {},
 	getters: {},
