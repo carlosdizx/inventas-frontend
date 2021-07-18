@@ -7,11 +7,6 @@
 		<router-link to="registro" v-slot="{ navigate }" custom>
 			<v-btn block @click="navigate">Registro</v-btn>
 		</router-link>
-		<v-container>
-			{{ usuario }}
-			<hr />
-			{{ token }}
-		</v-container>
 	</div>
 </template>
 
@@ -37,6 +32,8 @@
 		async created() {
 			this.tabs = [
 				{ link: '/', icono: 'mdi-home' },
+				{ link: '/', icono: 'mdi-plus-circle-outline' },
+				{ link: '/', icono: 'mdi-clipboard-list-outline' },
 				{ link: '/', icono: 'mdi-cash-register' },
 				{ link: '/', icono: 'mdi-food-variant' },
 				{ link: '/', icono: 'mdi-account-multiple' },

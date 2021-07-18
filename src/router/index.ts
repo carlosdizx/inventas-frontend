@@ -6,13 +6,13 @@ Vue.use(VueRouter);
 const routes: Array<RouteConfig> = [
 	{
 		path: '/',
-		name: 'Home',
-		component: () => import('../views/Home.vue'),
+		name: 'InicioSesion',
+		component: () => import('../views/InicioSesion.vue'),
 	},
 	{
 		path: '/inicio',
-		name: 'InicioSesion',
-		component: () => import('../views/InicioSesion.vue'),
+		name: 'Home',
+		component: () => import('../views/Home.vue'),
 	},
 	{
 		path: '/registro',

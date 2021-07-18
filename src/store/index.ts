@@ -28,7 +28,7 @@ export default new Vuex.Store({
 					commit('ASIGNAR_TOKEN', respuesta.data);
 
 					localStorage.setItem('token', JSON.stringify(respuesta.data));
-					router.push('/');
+					router.push('/inicio');
 				})
 				.catch((error) => {
 					Swal.fire(
@@ -68,7 +68,7 @@ export default new Vuex.Store({
 				return await dispatch('listarClientes');
 			}
 			await Swal.fire('Iniciar sesion', 'Vuelve a iniciar sesion 👌', 'info');
-			await router.push('/inicio');
+			await router.push('/');
 		},
 		//------------------------------------------------------------------------------------------------------------
 		//------------------------------------------------- CLIENTES -------------------------------------------------
@@ -80,7 +80,7 @@ export default new Vuex.Store({
 					.then((respuesta) => console.log(respuesta.data.Mensaje))
 					.catch((error) => {
 						Swal.fire('Error', `Inicio de sesion cadudcado <br>${error}`, 'error');
-						router.push('/inicio');
+						router.push('/');
 					});
 			}
 		},
