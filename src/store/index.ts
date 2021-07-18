@@ -30,7 +30,18 @@ export default new Vuex.Store({
 					localStorage.setItem('token', JSON.stringify(respuesta.data));
 					router.push('/');
 				})
-				.catch((error) => console.log(error));
+				.catch((error) => {
+					Swal.fire(
+						'Error',
+						`${
+							error.message === 'Request failed with status code 400'
+								? 'Credenciales erroneas'
+								: error
+						}`,
+						'error'
+					);
+					console.log(error);
+				});
 		},
 		cargarDatos: async ({ commit, state }) => {
 			if (state.token !== null) {

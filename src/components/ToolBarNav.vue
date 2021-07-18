@@ -1,5 +1,9 @@
 <template>
 	<v-card>
+    <v-toolbar color="indigo" dark flat>
+      <v-toolbar-title>Inventas</v-toolbar-title>
+      <v-spacer></v-spacer>
+    </v-toolbar>
 		<v-tabs
 			background-color="indigo"
 			center-active

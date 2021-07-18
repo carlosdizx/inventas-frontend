@@ -7,12 +7,11 @@
 		<router-link to="registro" v-slot="{ navigate }" custom>
 			<v-btn block @click="navigate">Registro</v-btn>
 		</router-link>
-		<hr />
-		<hr />
-		{{ usuario }}
-		<hr />
-		<hr />
-		{{ token }}
+		<v-container>
+			{{ usuario }}
+			<hr />
+			{{ token }}
+		</v-container>
 	</div>
 </template>
 
