@@ -8,8 +8,8 @@
 			background-color="indigo"
 			center-active
 			dark
-			next-icon="mdi-arrow-right-bold-box-outline"
-			prev-icon="mdi-arrow-left-bold-box-outline"
+			next-icon="mdi-arrow-right-bold-circle-outline"
+			prev-icon="mdi-arrow-left-bold-circle-outline"
 			show-arrows
 		>
 			<router-link

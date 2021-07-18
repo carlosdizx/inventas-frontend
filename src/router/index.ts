@@ -19,6 +19,11 @@ const routes: Array<RouteConfig> = [
 		name: 'RegistroUsuario',
 		component: () => import('../views/RegistroUsuario.vue'),
 	},
+	{
+		path: '/forms',
+		name: 'Forms',
+		component: () => import('../views/Forms.vue'),
+	},
 ];
 
 const router = new VueRouter({
