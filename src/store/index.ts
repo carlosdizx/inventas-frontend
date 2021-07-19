@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex, { Commit, createLogger } from 'vuex';
 import { LOGUEAR } from '@/servicios/auth';
 import router from '@/router';
-import {LISTAR_CLIENTES, LISTAR_PRODUCTOS} from '@/servicios/recursos';
+import { LISTAR_CLIENTES, LISTAR_PRODUCTOS } from '@/servicios/recursos';
 import Swal from 'sweetalert2';
 
 Vue.use(Vuex);
@@ -36,7 +36,7 @@ export default new Vuex.Store({
 						`${
 							error.message === 'Request failed with status code 400'
 								? 'Credenciales erroneas'
-								: error
+								: JSON.stringify(error)
 						}`,
 						'error'
 					);

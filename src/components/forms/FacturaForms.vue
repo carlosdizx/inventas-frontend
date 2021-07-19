@@ -70,6 +70,7 @@
 				<v-btn block color="success" :disabled="invalid" @click="submit">
 					Registrar venta
 				</v-btn>
+				<Tabla :columnas="columnas" :filas="comprados" />
 			</v-card-text>
 		</v-card>
 	</validation-observer>
@@ -83,6 +84,7 @@
 		ValidationProvider,
 		setInteractionMode,
 	} from 'vee-validate';
+	import Tabla from '../general/Tabla';
 	import { mapActions } from 'vuex';
 	import Swal from 'sweetalert2';
 
@@ -116,7 +118,7 @@
 	}
 	export default {
 		name: 'FacturaForms',
-		components: { ValidationProvider, ValidationObserver },
+		components: { ValidationProvider, ValidationObserver, Tabla },
 		data: () => ({
 			documento: null,
 			productos: [],
@@ -126,6 +128,7 @@
 			comprados: [],
 			total: 0,
 			dinero: 0,
+			columnas: ['Producto', 'Precio', 'Cantidad', 'Subtotal'],
 		}),
 		methods: {
 			...mapActions(['listarProductos', 'listarClientes']),
@@ -158,7 +161,14 @@
 				}
 				await this.productos.forEach((producto) => {
 					if (producto.nombre === this.productoSeleccionado) {
-						return (this.total += producto.precioVenta * this.cantidad);
+						const subTotal = producto.precioVenta * this.cantidad;
+						this.comprados.push({
+							producto: producto.nombre,
+							precio: producto.precioVenta,
+							cantiad: this.cantidad,
+							subTotal: subTotal,
+						});
+						return (this.total += subTotal);
 					}
 				});
 				this.cantidad = 1;
