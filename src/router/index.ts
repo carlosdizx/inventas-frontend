@@ -12,7 +12,7 @@ const routes: Array<RouteConfig> = [
 	{
 		path: '/inicio',
 		name: 'Home',
-		component: () => import('../views/Home.vue'),
+		component: () => import('../views/Inicio.vue'),
 	},
 	{
 		path: '/registro',
@@ -22,7 +22,7 @@ const routes: Array<RouteConfig> = [
 	{
 		path: '/listados',
 		name: 'Forms',
-		component: () => import('../views/Forms.vue'),
+		component: () => import('../views/Listado.vue'),
 	},
 ];
 

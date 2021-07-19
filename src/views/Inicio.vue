@@ -16,7 +16,7 @@
 	import ToolBarNav from '../components/ToolBarNav';
 
 	export default Vue.extend({
-		name: 'Home',
+		name: 'Inicio',
 		components: {
 			ToolBarNav,
 		},

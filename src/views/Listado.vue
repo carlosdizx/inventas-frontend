@@ -7,7 +7,7 @@
 <script>
 	import ToolBarListados from '../components/listados/ToolBarListados';
 	export default {
-		name: 'Forms',
+		name: 'Listados',
 		components: {
 			ToolBarListados,
 		},

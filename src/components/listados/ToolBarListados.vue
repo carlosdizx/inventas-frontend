@@ -23,11 +23,11 @@
 			</v-btn>
 		</v-card>
 		<div v-if="indice === 1">
-			<v-btn block dark color="red" v-if="!showClientes">No hay clientes</v-btn>
+			<v-btn block dark color="red" v-if="!showClientes" role="alert">No hay clientes</v-btn>
 			<Tabla v-if="showClientes" :columnas="columnas_clientes" :filas="clientes" />
 		</div>
 		<div v-if="indice === 2">
-			<v-btn block dark color="red" v-if="!showProductos">No hay productos</v-btn>
+			<v-btn block dark color="red" v-if="!showProductos" role="alert">No hay productos</v-btn>
 			<Tabla v-if="showProductos" :columnas="columnas_productos" :filas="productos" />
 		</div>
 	</div>
