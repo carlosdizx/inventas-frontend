@@ -11,7 +11,7 @@
 				<v-form @submit.prevent="submit">
 					<validation-provider
 						v-slot="{ errors }"
-						name="Documento de cliente"
+						name="Descripcion"
 						rules="required|min:5|max:20"
 					>
 						<v-text-field
@@ -24,6 +24,12 @@
 							counter
 						/>
 					</validation-provider>
+					<v-select
+						v-model="clienteSeleccionado"
+						label="Clientes registrados"
+						:items="clientes"
+						item-text="nombres"
+					/>
 					<v-spacer />
 					<v-divider />
 					<v-spacer />
@@ -120,15 +126,17 @@
 		data: () => ({
 			documento: null,
 			productos: [],
+			clientes: [],
 			cantidad: 1,
 			productoSeleccionado: null,
+			clienteSeleccionado: null,
 			mostrar: false,
 			comprados: [],
 			total: 0,
 			dinero: 0,
 		}),
 		methods: {
-			...mapActions(['listarProductos']),
+			...mapActions(['listarProductos', 'listarClientes']),
 			submit() {},
 			async cargarDatosProductos() {
 				const respuesta = await this.listarProductos();
@@ -138,6 +146,15 @@
 				}
 				this.mostrar = true;
 				this.productos = respuesta.data.Mensaje;
+			},
+			async cargarDatosClientes() {
+				const respuesta = await this.listarClientes();
+				if (typeof respuesta.data.Mensaje === 'string') {
+					this.mostrar = false;
+					return;
+				}
+				this.mostrar = true;
+				this.clientes = respuesta.data.Mensaje;
 			},
 			async agregarAlCarrito() {
 				if (this.productoSeleccionado === null || this.cantidad <= 0) {
@@ -158,6 +175,7 @@
 		},
 		async mounted() {
 			await this.cargarDatosProductos();
+			await this.cargarDatosClientes();
 		},
 	};
 </script>
