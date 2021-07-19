@@ -1,38 +1,90 @@
 <template>
-	<v-card>
-		<v-toolbar color="green" dark flat>
-			<v-toolbar-title>Listados</v-toolbar-title>
-			<v-spacer></v-spacer>
-		</v-toolbar>
-		<v-tabs
-			background-color="green"
-			center-active
-			dark
-			next-icon="mdi-arrow-right-bold-circle-outline"
-			prev-icon="mdi-arrow-left-bold-circle-outline"
-			show-arrows
-		>
-			<v-tab v-for="(tab, index) in tabs" :key="index" @click="cambiarIndex(index + 1)">
-				<v-icon>{{ tab }}</v-icon>
-			</v-tab>
-		</v-tabs>
-		<v-btn disabled text>
-      {{ index === 1 ? 'Productos/Servicios' : 'Clientes' }}
-    </v-btn>
-	</v-card>
+	<div>
+		<v-card>
+			<v-toolbar color="green" dark flat>
+				<v-toolbar-title>Listados</v-toolbar-title>
+				<v-spacer></v-spacer>
+			</v-toolbar>
+			<v-tabs
+				background-color="green"
+				center-active
+				dark
+				next-icon="mdi-arrow-right-bold-circle-outline"
+				prev-icon="mdi-arrow-left-bold-circle-outline"
+				show-arrows
+			>
+        <v-tabs-slider color="red"></v-tabs-slider>
+				<v-tab v-for="(tab, index) in tabs" :key="index" @click="cambiarIndex(index + 1)">
+					<v-icon>{{ tab }}</v-icon>
+				</v-tab>
+			</v-tabs>
+			<v-btn disabled text>
+				{{ indice === 1 ? 'Clientes' : 'Productos/Servicios' }}
+			</v-btn>
+		</v-card>
+		<div v-if="indice === 1">
+			<v-btn block dark color="red" v-if="!showClientes">No hay clientes</v-btn>
+			<Tabla v-if="showClientes" :columnas="columnas_clientes" :filas="clientes" />
+		</div>
+		<div v-if="indice === 2">
+			<v-btn block dark color="red" v-if="!showProductos">No hay productos</v-btn>
+			<Tabla v-if="showProductos" :columnas="columnas_productos" :filas="productos" />
+		</div>
+	</div>
 </template>
 
 <script>
+	import Tabla from '../general/Tabla';
+	import { mapActions } from 'vuex';
+
 	export default {
 		name: 'ToolBarListados',
+		components: {
+			Tabla,
+		},
 		data: () => ({
-			index: 1,
+			tabs: ['mdi-account-outline', 'mdi-archive'],
+			columnas_clientes: [],
+			columnas_productos: [],
+			clientes: [],
+			productos: [],
+			showClientes: false,
+			showProductos: false,
+			indice: 1,
 		}),
-		props: { tabs: Array },
 		methods: {
-			cambiarIndex(indice) {
-				this.index = indice;
+			...mapActions(['listarClientes', 'listarProductos']),
+			async cargarDatosClientes() {
+				const respuesta = await this.listarClientes();
+				if (typeof respuesta.data.Mensaje === 'string') {
+					this.showClientes = false;
+					return;
+				}
+				this.showClientes = true;
+				this.clientes = respuesta.data.Mensaje;
+				if (this.clientes.length > 0) {
+					this.columnas_clientes = Object.keys(this.clientes[0]);
+				}
 			},
+			async cargarDatosProductos() {
+				const respuesta = await this.listarProductos();
+				if (typeof respuesta.data.Mensaje === 'string') {
+					this.showProductos = false;
+					return;
+				}
+				this.showProductos = true;
+				this.productos = respuesta.data.Mensaje;
+				if (this.productos.length > 0) {
+					this.columnas_productos = Object.keys(this.productos[0]);
+				}
+			},
+			cambiarIndex(index) {
+				this.indice = index;
+			},
+		},
+		async mounted() {
+			await this.cargarDatosClientes();
+			await this.cargarDatosProductos();
 		},
 	};
 </script>
