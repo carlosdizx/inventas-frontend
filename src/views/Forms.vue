@@ -1,13 +1,11 @@
 <template>
 	<div>
 		<ToolBarListados :tabs="tabs" />
-		<div>
+		<div v-if="indice===1">
 			<v-btn block dark color="red" v-if="!showClientes">No hay clientes</v-btn>
 			<Tabla v-if="showClientes" :columnas="columnas_clientes" :filas="clientes" />
 		</div>
-		<hr />
-		<br />
-		<div>
+		<div v-if="indice===2">
 			<v-btn block dark color="red" v-if="!showProductos">No hay productos</v-btn>
 			<Tabla v-if="showProductos" :columnas="columnas_productos" :filas="productos" />
 		</div>
@@ -32,6 +30,7 @@
 			productos: [],
 			showClientes: false,
 			showProductos: false,
+      indice:1
 		}),
 		methods: {
 			...mapActions(['listarClientes', 'listarProductos']),
