@@ -1,7 +1,16 @@
 <template>
 	<div>
 		<ToolBarListados :tabs="tabs" />
-		<Tabla :columnas="columnas_clientes" :filas="clientes" />
+		<div>
+			<v-btn block dark color="red" v-if="!showClientes">No hay clientes</v-btn>
+			<Tabla v-if="showClientes" :columnas="columnas_clientes" :filas="clientes" />
+		</div>
+		<hr />
+		<br />
+		<div>
+			<v-btn block dark color="red" v-if="!showProductos">No hay productos</v-btn>
+			<Tabla v-if="showProductos" :columnas="columnas_productos" :filas="productos" />
+		</div>
 	</div>
 </template>
 
@@ -18,18 +27,42 @@
 		data: () => ({
 			tabs: ['mdi-archive', 'mdi-account-outline'],
 			columnas_clientes: [],
-      clientes: [],
-    }),
+			columnas_productos: [],
+			clientes: [],
+			productos: [],
+			showClientes: false,
+			showProductos: false,
+		}),
 		methods: {
-			...mapActions(['listarClientes']),
+			...mapActions(['listarClientes', 'listarProductos']),
+			async cargarDatosClientes() {
+				const respuesta = await this.listarClientes();
+				if (typeof respuesta.data.Mensaje === 'string') {
+					this.showClientes = false;
+					return;
+				}
+				this.showClientes = true;
+				this.clientes = respuesta.data.Mensaje;
+				if (this.clientes.length > 0) {
+					this.columnas_clientes = Object.keys(this.clientes[0]);
+				}
+			},
+			async cargarDatosProductos() {
+				const respuesta = await this.listarProductos();
+				if (typeof respuesta.data.Mensaje === 'string') {
+					this.showProductos = false;
+					return;
+				}
+				this.showProductos = true;
+				this.productos = respuesta.data.Mensaje;
+				if (this.productos.length > 0) {
+					this.columnas_productos = Object.keys(this.productos[0]);
+				}
+			},
 		},
 		async mounted() {
-			const respuesta = await this.listarClientes();
-			this.clientes = respuesta.data.Mensaje;
-			if(this.clientes.length > 0){
-			  this.columnas_clientes = Object.keys(this.clientes[0]);
-      }
-			console.log(JSON.parse(JSON.stringify(this.clientes)));
+			await this.cargarDatosClientes();
+			await this.cargarDatosProductos();
 		},
 	};
 </script>

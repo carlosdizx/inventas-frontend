@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex, { Commit, createLogger } from 'vuex';
 import { LOGUEAR } from '@/servicios/auth';
 import router from '@/router';
-import { LISTAR_CLIENTES } from '@/servicios/recursos';
+import {LISTAR_CLIENTES, LISTAR_PRODUCTOS} from '@/servicios/recursos';
 import Swal from 'sweetalert2';
 
 Vue.use(Vuex);
@@ -86,10 +86,17 @@ export default new Vuex.Store({
 		//------------------------------------------------------------------------------------------------------------
 		//------------------------------------------------- CLIENTES -------------------------------------------------
 		//------------------------------------------------------------------------------------------------------------
-		listarClientes():any{
+		listarClientes(): any {
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
 			return LISTAR_CLIENTES(token.access_token);
-		}
+		},
+		//------------------------------------------------------------------------------------------------------------
+		//------------------------------------------------- PRODUCTOS -------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------
+		listarProductos(): any {
+			const token: any = JSON.parse(<string>localStorage.getItem('token'));
+			return LISTAR_PRODUCTOS(token.access_token);
+		},
 	},
 	modules: {},
 	getters: {},
