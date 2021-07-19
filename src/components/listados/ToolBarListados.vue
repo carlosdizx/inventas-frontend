@@ -2,8 +2,16 @@
 	<div>
 		<v-card>
 			<v-toolbar color="green" dark flat>
-				<v-toolbar-title>Listados</v-toolbar-title>
-				<v-spacer></v-spacer>
+				<v-app-bar-nav-icon>
+					<router-link to="/inicio" v-slot="{ navigate }" custom>
+						<v-btn @click="navigate" role="link" icon>
+							<v-icon>mdi-arrow-left-thin-circle-outline</v-icon>
+						</v-btn>
+					</router-link>
+				</v-app-bar-nav-icon>
+        <v-toolbar-title>Listados</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-icon>mdi-{{ icono }}</v-icon>
 			</v-toolbar>
 			<v-tabs
 				background-color="green"
@@ -13,7 +21,7 @@
 				prev-icon="mdi-arrow-left-bold-circle-outline"
 				show-arrows
 			>
-        <v-tabs-slider color="red"></v-tabs-slider>
+				<v-tabs-slider color="red"></v-tabs-slider>
 				<v-tab v-for="(tab, index) in tabs" :key="index" @click="cambiarIndex(index + 1)">
 					<v-icon>{{ tab }}</v-icon>
 				</v-tab>
@@ -23,11 +31,15 @@
 			</v-btn>
 		</v-card>
 		<div v-if="indice === 1">
-			<v-btn block dark color="red" v-if="!showClientes" role="alert">No hay clientes</v-btn>
+			<v-btn block dark color="red" v-if="!showClientes" role="alert"
+				>No hay clientes</v-btn
+			>
 			<Tabla v-if="showClientes" :columnas="columnas_clientes" :filas="clientes" />
 		</div>
 		<div v-if="indice === 2">
-			<v-btn block dark color="red" v-if="!showProductos" role="alert">No hay productos</v-btn>
+			<v-btn block dark color="red" v-if="!showProductos" role="alert"
+				>No hay productos</v-btn
+			>
 			<Tabla v-if="showProductos" :columnas="columnas_productos" :filas="productos" />
 		</div>
 	</div>
@@ -51,6 +63,7 @@
 			showClientes: false,
 			showProductos: false,
 			indice: 1,
+			icono: 'clipboard-list-outline',
 		}),
 		methods: {
 			...mapActions(['listarClientes', 'listarProductos']),

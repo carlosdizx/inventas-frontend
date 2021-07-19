@@ -24,6 +24,11 @@ const routes: Array<RouteConfig> = [
 		name: 'Forms',
 		component: () => import('../views/Listado.vue'),
 	},
+	{
+		path: '/cajaregistradora',
+		name: 'CajaRegistradora',
+		component: () => import('../views/forms/CajaRegistradora.vue'),
+	},
 ];
 
 const router = new VueRouter({

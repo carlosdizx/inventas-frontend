@@ -31,15 +31,15 @@
 		},
 		async created() {
 			this.tabs = [
-				{ link: '/', icono: 'mdi-home' },
-				{ link: '/listados', icono: 'mdi-plus-circle-outline' },
-				{ link: '/', icono: 'mdi-clipboard-list-outline' },
-				{ link: '/', icono: 'mdi-cash-register' },
-				{ link: '/', icono: 'mdi-food-variant' },
-				{ link: '/', icono: 'mdi-account-multiple' },
-				{ link: '/', icono: 'mdi-receipt' },
-				{ link: '/', icono: 'mdi-file-document' },
-				{ link: '/', icono: 'mdi-poll' },
+				{ link: '/inicio', icono: 'mdi-home' },
+        { link: '/cajaregistradora', icono: 'mdi-cash-register' },
+        { link: '/listados', icono: 'mdi-clipboard-list-outline' },
+				{ link: '/inicio', icono: 'mdi-plus-circle-outline' },
+				{ link: '/inicio', icono: 'mdi-food-variant' },
+				{ link: '/inicio', icono: 'mdi-account-multiple' },
+				{ link: '/inicio', icono: 'mdi-receipt' },
+				{ link: '/inicio', icono: 'mdi-file-document' },
+				{ link: '/inicio', icono: 'mdi-poll' },
 			];
 			await this.comprobarToken();
 		},
