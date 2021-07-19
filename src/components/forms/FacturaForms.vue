@@ -17,19 +17,13 @@
 						<v-text-field
 							v-model.number="documento"
 							label="Documento del cliente"
-							append-icon="mdi-account-plus"
+							prepend-icon="mdi-account-plus"
 							type="number"
 							required
 							:error-messages="errors"
 							counter
 						/>
 					</validation-provider>
-					<v-select
-						v-model="clienteSeleccionado"
-						label="Clientes registrados"
-						:items="clientes"
-						item-text="nombres"
-					/>
 					<v-spacer />
 					<v-divider />
 					<v-spacer />
@@ -126,10 +120,8 @@
 		data: () => ({
 			documento: null,
 			productos: [],
-			clientes: [],
 			cantidad: 1,
 			productoSeleccionado: null,
-			clienteSeleccionado: null,
 			mostrar: false,
 			comprados: [],
 			total: 0,
