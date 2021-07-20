@@ -59,13 +59,14 @@
 					type="number"
 				/>
 				<v-alert text color="indigo">
-					Total <strong>${{ total }}</strong>
+					Total <strong>{{ total | toUSD }}</strong>
 				</v-alert>
 				<v-alert
 					text
 					:color="total - dinero > 0 ? 'red' : total - dinero < 0 ? 'green' : 'orange'"
 				>
-					Cambio <strong>${{ Math.abs(total - dinero) }}</strong>
+					Cambio
+					<strong>{{ Math.abs(total - dinero) | toUSD }}</strong>
 				</v-alert>
 				<v-btn
 					block
@@ -186,11 +187,9 @@
 					if (producto.nombre === this.productoSeleccionado) {
 						let registrado = false;
 						this.comprados.forEach((comprado, index) => {
-							console.log(comprado.producto);
 							if (comprado.producto === this.productoSeleccionado) {
 								comprado.cantiad += this.cantidad;
 								comprado.subTotal += comprado.precio * this.cantidad;
-								this.total += comprado.subTotal;
 								return (registrado = true);
 							}
 						});
@@ -202,12 +201,14 @@
 								cantiad: this.cantidad,
 								subTotal: subTotal,
 							});
-							this.items.push({ producto: producto, cantidad: this.cantidad });
-							return (this.total += subTotal);
+							return this.items.push({ producto: producto, cantidad: this.cantidad });
 						}
 					}
 				});
-
+				this.total = 0;
+				this.comprados.forEach((comprado) => {
+					this.total += comprado.precio * comprado.cantiad;
+				});
 				this.cantidad = 1;
 				this.productoSeleccionado = null;
 			},
