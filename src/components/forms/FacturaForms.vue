@@ -8,7 +8,7 @@
 		<v-card v-if="mostrar">
 			<v-card-title>Registro Factura/Venta</v-card-title>
 			<v-card-subtitle>
-				<v-form @submit.prevent="submit">
+				<v-form>
 					<validation-provider
 						v-slot="{ errors }"
 						name="Descripcion"
@@ -16,9 +16,9 @@
 					>
 						<v-text-field
 							v-model.number="documento"
+							type="number"
 							label="Documento del cliente"
 							prepend-icon="mdi-account-plus"
-							type="number"
 							required
 							:error-messages="errors"
 							counter
@@ -67,7 +67,7 @@
 				>
 					Cambio <strong>${{ Math.abs(total - dinero) }}</strong>
 				</v-alert>
-				<v-btn block color="success" :disabled="invalid" @click="submit">
+				<v-btn block color="success" :disabled="invalid" @click="registrarFactura">
 					Registrar venta
 				</v-btn>
 				<Tabla :columnas="columnas" :filas="comprados" />
@@ -126,13 +126,22 @@
 			productoSeleccionado: null,
 			mostrar: false,
 			comprados: [],
+			items: [],
 			total: 0,
 			dinero: 0,
 			columnas: ['Producto', 'Precio', 'Cantidad', 'Subtotal'],
 		}),
 		methods: {
-			...mapActions(['listarProductos', 'listarClientes']),
-			submit() {},
+			...mapActions([
+				'listarProductos',
+				'listarClientes',
+				'listarFacturas',
+				'guardarFactura',
+			]),
+			async registrarFactura() {
+				const factura = { descripcion: this.documento.toString(), items: this.items };
+				await this.guardarFactura(factura);
+			},
 			async cargarDatosProductos() {
 				const respuesta = await this.listarProductos();
 				if (typeof respuesta.data.Mensaje === 'string') {
@@ -141,15 +150,6 @@
 				}
 				this.mostrar = true;
 				this.productos = respuesta.data.Mensaje;
-			},
-			async cargarDatosClientes() {
-				const respuesta = await this.listarClientes();
-				if (typeof respuesta.data.Mensaje === 'string') {
-					this.mostrar = false;
-					return;
-				}
-				this.mostrar = true;
-				this.clientes = respuesta.data.Mensaje;
 			},
 			async agregarAlCarrito() {
 				if (this.productoSeleccionado === null || this.cantidad <= 0) {
@@ -168,6 +168,7 @@
 							cantiad: this.cantidad,
 							subTotal: subTotal,
 						});
+						this.items.push({ producto: producto, cantidad: this.cantidad });
 						return (this.total += subTotal);
 					}
 				});
@@ -177,7 +178,6 @@
 		},
 		async mounted() {
 			await this.cargarDatosProductos();
-			await this.cargarDatosClientes();
 		},
 	};
 </script>

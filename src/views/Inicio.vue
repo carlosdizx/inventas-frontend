@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<ToolBarNav :tabs="tabs" />
-		<router-link to="inicio" v-slot="{ navigate }" custom>
+		<router-link to="/" v-slot="{ navigate }" custom>
 			<v-btn block @click="navigate">Login</v-btn>
 		</router-link>
 		<router-link to="registro" v-slot="{ navigate }" custom>

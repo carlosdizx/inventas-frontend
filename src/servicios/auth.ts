@@ -1,10 +1,9 @@
-import { AXIOS_INSTANCIA, QUERY_STRING } from './axios';
+import { INSTANCIA, QUERY_STRING } from './axios';
 const CREDENCIALES = btoa('inventas' + ':' + '7423102ca');
 
 export const LOGUEAR = async (username: any, password: any) =>
-	await AXIOS_INSTANCIA.post(
+	await INSTANCIA.post(
 		'oauth/token',
-
 		QUERY_STRING.stringify({
 			grant_type: 'password',
 			username: username,
@@ -13,8 +12,8 @@ export const LOGUEAR = async (username: any, password: any) =>
 		{
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded',
-				'Accept':'application/json',
-				'Authorization': 'Basic ' + CREDENCIALES,
+				Accept: 'application/json',
+				Authorization: 'Basic ' + CREDENCIALES,
 			},
 		}
 	);
