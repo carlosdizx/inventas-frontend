@@ -52,13 +52,22 @@
 				</v-form>
 			</v-card-subtitle>
 			<v-card-text>
-				<v-text-field
-					v-model.number="dinero"
-					label="Calculadora rapida"
-					prepend-icon="mdi-cash"
-					type="number"
-				/>
-				<v-alert text color="indigo">
+				<v-row>
+					<v-col cols="6">
+						<v-text-field
+							v-model.number="dinero"
+							label="Calculadora rapida"
+							prepend-icon="mdi-cash"
+							type="number"
+						/>
+					</v-col>
+					<v-col cols="6">
+						<v-alert dense text color="indigo">
+							<strong>{{ dinero | toUSD }}</strong>
+						</v-alert>
+					</v-col>
+				</v-row>
+				<v-alert text color="success">
 					Total <strong>{{ total | toUSD }}</strong>
 				</v-alert>
 				<v-alert
