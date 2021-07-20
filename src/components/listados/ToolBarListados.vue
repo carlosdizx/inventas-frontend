@@ -38,7 +38,7 @@
 		</div>
 		<div v-if="indice === 2">
 			<v-btn block dark color="red" v-if="!showProductos" role="alert"
-				>No hay productos</v-btn
+				>No hay productos o no tienes acceso</v-btn
 			>
 			<Tabla v-if="showProductos" :columnas="columnas_productos" :filas="productos" />
 		</div>
@@ -48,6 +48,7 @@
 <script>
 	import Tabla from '../general/Tabla';
 	import { mapActions } from 'vuex';
+	import Swal from 'sweetalert2';
 
 	export default {
 		name: 'ToolBarListados',
@@ -80,15 +81,19 @@
 				}
 			},
 			async cargarDatosProductos() {
-				const respuesta = await this.listarProductos();
-				if (typeof respuesta.data.Mensaje === 'string') {
-					this.showProductos = false;
-					return;
-				}
-				this.showProductos = true;
-				this.productos = respuesta.data.Mensaje;
-				if (this.productos.length > 0) {
-					this.columnas_productos = Object.keys(this.productos[0]);
+				try {
+					const respuesta = await this.listarProductos();
+					if (typeof respuesta.data.Mensaje === 'string') {
+						this.showProductos = false;
+						return;
+					}
+					this.showProductos = true;
+					this.productos = respuesta.data.Mensaje;
+					if (this.productos.length > 0) {
+						this.columnas_productos = Object.keys(this.productos[0]);
+					}
+				} catch (onerror) {
+          console.log('El usuario no tiene accesos al listado productos')
 				}
 			},
 			cambiarIndex(index) {
