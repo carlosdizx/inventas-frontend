@@ -81,19 +81,15 @@
 				}
 			},
 			async cargarDatosProductos() {
-				try {
-					const respuesta = await this.listarProductos();
-					if (typeof respuesta.data.Mensaje === 'string') {
-						this.showProductos = false;
-						return;
-					}
-					this.showProductos = true;
-					this.productos = respuesta.data.Mensaje;
-					if (this.productos.length > 0) {
-						this.columnas_productos = Object.keys(this.productos[0]);
-					}
-				} catch (onerror) {
-          console.log('El usuario no tiene accesos al listado productos')
+				const respuesta = await this.listarProductos();
+				if (typeof respuesta.data.Mensaje === 'string') {
+					this.showProductos = false;
+					return;
+				}
+				this.showProductos = true;
+				this.productos = respuesta.data.Mensaje;
+				if (this.productos.length > 0) {
+					this.columnas_productos = Object.keys(this.productos[0]);
 				}
 			},
 			cambiarIndex(index) {
@@ -101,9 +97,13 @@
 			},
 		},
 		async mounted() {
-			await this.comprobarToken();
-			await this.cargarDatosClientes();
-			await this.cargarDatosProductos();
+			try {
+				await this.comprobarToken();
+				await this.cargarDatosClientes();
+				await this.cargarDatosProductos();
+			} catch (e) {
+				console.log('El usuario no tiene acceso alguno de los recursos');
+			}
 		},
 	};
 </script>

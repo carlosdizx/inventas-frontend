@@ -239,8 +239,10 @@
 			},
 		},
 		async mounted() {
-			await this.comprobarToken();
-			await this.cargarDatosProductos();
+			try {
+				await this.comprobarToken();
+				await this.cargarDatosProductos();
+			} catch (e) {}
 		},
 	};
 </script>
