@@ -1,94 +1,107 @@
 <template>
-	<validation-observer ref="observer" v-slot="{ invalid }">
-		<v-container v-if="!mostrar" color="red">
-			No se puede registrar ventas<br />
-			1. Agregue uno o mas productos <br />
-			2. agregue almenos un cliete
-		</v-container>
-		<v-card v-if="mostrar">
-			<v-card-title>Registro Factura/Venta</v-card-title>
-			<v-card-subtitle>
-				<v-form>
-					<validation-provider
-						v-slot="{ errors }"
-						name="Descripcion"
-						rules="required|min:5|max:20"
-					>
-						<v-text-field
-							v-model.number="documento"
-							type="number"
-							label="Documento del cliente"
-							prepend-icon="mdi-account-plus"
-							required
-							:error-messages="errors"
-							counter
-						/>
-					</validation-provider>
-					<v-spacer />
-					<v-divider />
-					<v-spacer />
-					<v-row>
-						<v-col cols="3">
+	<div>
+		<v-card>
+			<v-toolbar color="green" dark flat>
+				<v-app-bar-nav-icon>
+					<router-link to="/inicio" v-slot="{ navigate }" custom>
+						<v-btn @click="navigate" role="link" icon>
+							<v-icon>mdi-arrow-left-thin-circle-outline</v-icon>
+						</v-btn>
+					</router-link>
+				</v-app-bar-nav-icon>
+				<v-toolbar-title>Registre una factura de venta</v-toolbar-title>
+			</v-toolbar>
+		</v-card>
+		<validation-observer ref="observer" v-slot="{ invalid }">
+			<v-container v-if="!mostrar" color="red">
+				No se puede registrar ventas<br />
+				1. Agregue uno o mas productos <br />
+				2. agregue almenos un cliete
+			</v-container>
+			<v-card v-if="mostrar">
+				<v-card-title>Complete los campos</v-card-title>
+				<v-card-subtitle>
+					<v-form>
+						<validation-provider
+							v-slot="{ errors }"
+							name="Documento"
+							rules="required|min:5|max:20"
+						>
 							<v-text-field
-								v-model.number="cantidad"
-								label="Cantidad"
-								type="number"
+								v-model="documento"
+								label="Documento del cliente"
+								prepend-icon="mdi-account-plus"
+								required
+								:error-messages="errors"
 								counter
 							/>
-						</v-col>
-						<v-col cols="9">
-							<v-select
-								v-model="productoSeleccionado"
-								label="Producto"
-								:items="productos"
-								item-text="nombre"
+						</validation-provider>
+						<v-spacer />
+						<v-divider />
+						<v-spacer />
+						<v-row>
+							<v-col cols="3">
+								<v-text-field
+									v-model.number="cantidad"
+									label="Cantidad"
+									type="number"
+									counter
+								/>
+							</v-col>
+							<v-col cols="9">
+								<v-select
+									v-model="productoSeleccionado"
+									label="Producto"
+									:items="productos"
+									item-text="nombre"
+								/>
+							</v-col>
+						</v-row>
+						<v-btn @click="agregarAlCarrito">
+							agregar producto
+							<v-icon>mdi-cart-plus</v-icon>
+						</v-btn>
+					</v-form>
+				</v-card-subtitle>
+				<v-card-text>
+					<v-row>
+						<v-col cols="6">
+							<v-text-field
+								v-model.number="dinero"
+								label="Calculadora rapida"
+								prepend-icon="mdi-cash"
+								type="number"
 							/>
 						</v-col>
+						<v-col cols="6">
+							<v-alert dense text color="indigo">
+								<strong>{{ dinero | toUSD }}</strong>
+							</v-alert>
+						</v-col>
 					</v-row>
-					<v-btn @click="agregarAlCarrito">
-						agregar producto
-						<v-icon>mdi-cart-plus</v-icon>
+					<v-alert text color="success">
+						Total <strong>{{ total | toUSD }}</strong>
+					</v-alert>
+					<v-alert
+						text
+						:color="total - dinero > 0 ? 'red' : total - dinero < 0 ? 'green' : 'orange'"
+					>
+						Cambio
+						<strong>{{ Math.abs(total - dinero) | toUSD }}</strong>
+					</v-alert>
+					<v-btn
+						block
+						color="success"
+						:disabled="invalid || comprados.length === 0"
+						@click="registrarFactura"
+					>
+						Registrar venta
 					</v-btn>
-				</v-form>
-			</v-card-subtitle>
-			<v-card-text>
-				<v-row>
-					<v-col cols="6">
-						<v-text-field
-							v-model.number="dinero"
-							label="Calculadora rapida"
-							prepend-icon="mdi-cash"
-							type="number"
-						/>
-					</v-col>
-					<v-col cols="6">
-						<v-alert dense text color="indigo">
-							<strong>{{ dinero | toUSD }}</strong>
-						</v-alert>
-					</v-col>
-				</v-row>
-				<v-alert text color="success">
-					Total <strong>{{ total | toUSD }}</strong>
-				</v-alert>
-				<v-alert
-					text
-					:color="total - dinero > 0 ? 'red' : total - dinero < 0 ? 'green' : 'orange'"
-				>
-					Cambio
-					<strong>{{ Math.abs(total - dinero) | toUSD }}</strong>
-				</v-alert>
-				<v-btn
-					block
-					color="success"
-					:disabled="invalid || comprados.length === 0"
-					@click="registrarFactura"
-				>
-					Registrar venta
-				</v-btn>
-				<Tabla :columnas="columnas" :filas="comprados" />
-			</v-card-text>
-		</v-card>
-	</validation-observer>
+					<Tabla :columnas="columnas" :filas="comprados" />
+				</v-card-text>
+			</v-card>
+		</validation-observer>
+	</div>
 </template>
 
 <script>
@@ -155,7 +168,10 @@
 				'comprobarToken',
 			]),
 			async registrarFactura() {
-				const factura = { descripcion: this.documento.toString(), items: this.items };
+				const factura = {
+					descripcion: this.documento.toString().toUpperCase(),
+					items: this.items,
+				};
 				const respuesta = await this.agregarFactura(factura);
 				if (typeof respuesta.data.Mensaje === 'string') {
 					return Swal.fire('Advertencia', `${respuesta.data.Mensaje}`, 'warning');

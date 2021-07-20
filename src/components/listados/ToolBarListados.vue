@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<v-card>
-			<v-toolbar color="green" dark flat>
+			<v-toolbar color="indigo" dark flat>
 				<v-app-bar-nav-icon>
 					<router-link to="/inicio" v-slot="{ navigate }" custom>
 						<v-btn @click="navigate" role="link" icon>
@@ -14,7 +14,7 @@
 				<v-icon>mdi-{{ icono }}</v-icon>
 			</v-toolbar>
 			<v-tabs
-				background-color="green"
+				background-color="indigo"
 				center-active
 				dark
 				next-icon="mdi-arrow-right-bold-circle-outline"
