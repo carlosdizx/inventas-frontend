@@ -67,7 +67,12 @@
 				>
 					Cambio <strong>${{ Math.abs(total - dinero) }}</strong>
 				</v-alert>
-				<v-btn block color="success" :disabled="invalid" @click="registrarFactura">
+				<v-btn
+					block
+					color="success"
+					:disabled="invalid || comprados.length === 0"
+					@click="registrarFactura"
+				>
 					Registrar venta
 				</v-btn>
 				<Tabla :columnas="columnas" :filas="comprados" />
@@ -136,11 +141,29 @@
 				'listarProductos',
 				'listarClientes',
 				'listarFacturas',
-				'guardarFactura',
+				'agregarFactura',
+				'comprobarToken',
 			]),
 			async registrarFactura() {
 				const factura = { descripcion: this.documento.toString(), items: this.items };
-				await this.guardarFactura(factura);
+				const respuesta = await this.agregarFactura(factura);
+				if (typeof respuesta.data.Mensaje === 'string') {
+					return Swal.fire('Advertencia', `${respuesta.data.Mensaje}`, 'warning');
+				}
+				this.cantidad = 1;
+				this.productoSeleccionado = null;
+				this.items = [];
+				this.comprados = [];
+				this.total = 0;
+				this.dinero = 0;
+				this.documento = null;
+				await Swal.fire({
+					position: 'center',
+					icon: 'success',
+					title: 'Factura registrada 😎👍',
+					showConfirmButton: false,
+					timer: 1500,
+				});
 			},
 			async cargarDatosProductos() {
 				const respuesta = await this.listarProductos();
@@ -161,22 +184,36 @@
 				}
 				await this.productos.forEach((producto) => {
 					if (producto.nombre === this.productoSeleccionado) {
-						const subTotal = producto.precioVenta * this.cantidad;
-						this.comprados.push({
-							producto: producto.nombre,
-							precio: producto.precioVenta,
-							cantiad: this.cantidad,
-							subTotal: subTotal,
+						let registrado = false;
+						this.comprados.forEach((comprado, index) => {
+							console.log(comprado.producto);
+							if (comprado.producto === this.productoSeleccionado) {
+								comprado.cantiad += this.cantidad;
+								comprado.subTotal += comprado.precio * this.cantidad;
+								this.total += comprado.subTotal;
+								return (registrado = true);
+							}
 						});
-						this.items.push({ producto: producto, cantidad: this.cantidad });
-						return (this.total += subTotal);
+						if (!registrado) {
+							const subTotal = producto.precioVenta * this.cantidad;
+							this.comprados.push({
+								producto: producto.nombre,
+								precio: producto.precioVenta,
+								cantiad: this.cantidad,
+								subTotal: subTotal,
+							});
+							this.items.push({ producto: producto, cantidad: this.cantidad });
+							return (this.total += subTotal);
+						}
 					}
 				});
+
 				this.cantidad = 1;
 				this.productoSeleccionado = null;
 			},
 		},
 		async mounted() {
+			await this.comprobarToken();
 			await this.cargarDatosProductos();
 		},
 	};

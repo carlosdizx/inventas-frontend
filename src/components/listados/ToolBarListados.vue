@@ -9,9 +9,9 @@
 						</v-btn>
 					</router-link>
 				</v-app-bar-nav-icon>
-        <v-toolbar-title>Listados</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-icon>mdi-{{ icono }}</v-icon>
+				<v-toolbar-title>Listados</v-toolbar-title>
+				<v-spacer></v-spacer>
+				<v-icon>mdi-{{ icono }}</v-icon>
 			</v-toolbar>
 			<v-tabs
 				background-color="green"
@@ -66,7 +66,7 @@
 			icono: 'clipboard-list-outline',
 		}),
 		methods: {
-			...mapActions(['listarClientes', 'listarProductos']),
+			...mapActions(['listarClientes', 'listarProductos', 'comprobarToken']),
 			async cargarDatosClientes() {
 				const respuesta = await this.listarClientes();
 				if (typeof respuesta.data.Mensaje === 'string') {
@@ -96,6 +96,7 @@
 			},
 		},
 		async mounted() {
+			await this.comprobarToken();
 			await this.cargarDatosClientes();
 			await this.cargarDatosProductos();
 		},

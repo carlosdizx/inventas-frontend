@@ -7,7 +7,6 @@ import {
 	LISTAR_CLIENTES,
 	LISTAR_FACTURAS,
 	LISTAR_PRODUCTOS,
-	REGISTRAR_FACTURA,
 } from '@/servicios/recursos';
 import Swal from 'sweetalert2';
 
@@ -19,7 +18,7 @@ export default new Vuex.Store({
 		token: null,
 	},
 	mutations: {
-		ASIGNAR_USUARIO: (state: { usuario: Object }, usuario: Object) =>
+		ASIGNAR_USUARIO: (state: { usuario: Object }, usuario: any) =>
 			(state.usuario = usuario),
 		ASIGNAR_TOKEN: (state: { token: any }, token: String) => (state.token = token),
 	},
@@ -64,30 +63,19 @@ export default new Vuex.Store({
 			}
 		},
 		comprobarToken: async ({ commit, dispatch, state }) => {
-			if (state.token !== null) {
-				await dispatch('cargarDatos');
-				return await dispatch('listarClientes', Array());
-			}
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
-			if (token !== null) {
-				await dispatch('cargarDatos');
-				return await dispatch('listarClientes', Array());
+			if (state.token === null || token !== null) {
+				await dispatch('listarClientes', Array()).catch(async (reason) => {
+					commit('ASIGNAR_USUARIO', {});
+					commit('ASIGNAR_TOKEN', null);
+					console.log(reason);
+					await Swal.fire('Por seguridad', 'Vuelve a iniciar sesion 👌', 'info');
+					return await router.push('/');
+				});
+				return;
 			}
 			await Swal.fire('Iniciar sesion', 'Vuelve a iniciar sesion 👌', 'info');
 			await router.push('/');
-		},
-		comprobarValidez: async ({ commit, dispatch }, list: []) => {
-			const token: any = JSON.parse(<string>localStorage.getItem('token'));
-			if (token !== null) {
-				await LISTAR_CLIENTES(token.access_token)
-					.then((respuesta) => {
-						list = respuesta.data.Mensaje;
-					})
-					.catch((error) => {
-						Swal.fire('Error', `Inicio de sesion cadudcado <br>${error}`, 'error');
-						router.push('/');
-					});
-			}
 		},
 		//------------------------------------------------------------------------------------------------------------
 		//------------------------------------------------- CLIENTES -------------------------------------------------
@@ -110,13 +98,9 @@ export default new Vuex.Store({
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
 			return LISTAR_FACTURAS(token.access_token);
 		},
-		guardarFactura: ({ commit }, factura: any) => {
+		agregarFactura: ({ commit }, factura: any) => {
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
-			return AGREGAR_FACTURA(token.access_token, factura)
-				.then((response) => {
-					console.log(response);
-				})
-				.catch((error) => console.log(error));
+			return AGREGAR_FACTURA(token.access_token, factura);
 		},
 	},
 	modules: {},
