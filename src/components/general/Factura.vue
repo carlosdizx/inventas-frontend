@@ -29,7 +29,9 @@
 					<br />
 					Cliente:<strong> {{ this.seleccionada.descripcion }}</strong>
 				</v-card-subtitle>
-				<v-card-actions>{{ items }}</v-card-actions>
+				<v-card-actions>
+					<Tabla :columnas="columnas" :filas="Object.values(items)" />
+				</v-card-actions>
 			</v-card>
 		</v-card>
 		<!--
@@ -77,18 +79,6 @@
 		}),
 		methods: {
 			...mapActions(['listarFacturas', 'listarInfoFacturas']),
-			actulizarInfo() {
-				if (this.items.length > 0) {
-					this.columnas = Object.keys(this.items[0]);
-					this.id = this.items[0].id;
-					this.fecha = this.items[0].fecha;
-					this.documento = this.items[0].descripcion;
-					this.total = 0;
-					this.items.forEach((valor) => {
-						this.total += valor.subTotal;
-					});
-				}
-			},
 			async cargarFacturas() {
 				const respuesta = await this.listarFacturas();
 				if (typeof respuesta.data.Mensaje === 'string') {
@@ -106,12 +96,13 @@
 			},
 			async buscarFactura() {
 				this.items = [];
+				this.seleccionada.total = 0;
 				await this.infoFacturas.forEach((info) => {
 					if (info.id === this.id) {
 						this.items.push(info);
+						this.seleccionada.total += info.subTotal;
 					}
 				});
-				const llaves = Object.keys(this.items[0]);
 				this.seleccionada.id = this.items[0].id;
 				this.seleccionada.descripcion = this.items[0].descripcion;
 				this.seleccionada.fecha = this.items[0].fecha;
@@ -122,7 +113,6 @@
 			try {
 				await this.cargarFacturas();
 				await this.cargarInfoFacturas();
-				this.actulizarInfo();
 			} catch (e) {
 				await Swal.fire(
 					'No se pudo obtener las facturas',
