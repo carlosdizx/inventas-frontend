@@ -20,7 +20,16 @@
 				</v-row>
 			</v-card-subtitle>
 			<v-card v-if="id !== 0 && mostrar">
-				<v-card-title>Factura #{{ idSeleccionado }}</v-card-title>
+				<v-card-title>Factura #{{ seleccionada.id }}</v-card-title>
+				<v-card-subtitle>
+					Total <strong>{{ this.seleccionada.total | toUSD }}</strong>
+					<br />
+					Fecha de compra
+					<strong>{{ this.seleccionada.fecha }}</strong>
+					<br />
+					Cliente:<strong> {{ this.seleccionada.descripcion }}</strong>
+				</v-card-subtitle>
+				<v-card-actions>{{ items }}</v-card-actions>
 			</v-card>
 		</v-card>
 		<!--
@@ -54,10 +63,12 @@
 		components: { Tabla },
 		data: () => ({
 			id: 0,
-			idSeleccionado: 0,
-			fecha: '',
-			documento: '',
-			total: 0,
+			seleccionada: {
+				id: 0,
+				fecha: '',
+				descripcion: '',
+				total: 0,
+			},
 			facturas: [],
 			infoFacturas: [],
 			columnas: [],
@@ -94,13 +105,16 @@
 				this.columnas = Object.keys(this.infoFacturas[0]);
 			},
 			async buscarFactura() {
-				this.idSeleccionado = this.id;
 				this.items = [];
 				await this.infoFacturas.forEach((info) => {
 					if (info.id === this.id) {
 						this.items.push(info);
 					}
 				});
+				const llaves = Object.keys(this.items[0]);
+				this.seleccionada.id = this.items[0].id;
+				this.seleccionada.descripcion = this.items[0].descripcion;
+				this.seleccionada.fecha = this.items[0].fecha;
 				this.mostrar = true;
 			},
 		},
