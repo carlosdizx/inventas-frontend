@@ -29,6 +29,11 @@ const routes: Array<RouteConfig> = [
 		name: 'CajaRegistradora',
 		component: () => import('../views/forms/CajaRegistradora.vue'),
 	},
+	{
+		path: '/facturas',
+		name: 'ListadosFacturas',
+		component: () => import('../views/ListadosFacturas.vue'),
+	},
 ];
 
 const router = new VueRouter({

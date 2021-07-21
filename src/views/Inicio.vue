@@ -37,7 +37,7 @@
 				{ link: '/inicio', icono: 'mdi-plus-circle-outline' },
 				{ link: '/inicio', icono: 'mdi-food-variant' },
 				{ link: '/inicio', icono: 'mdi-account-multiple' },
-				{ link: '/inicio', icono: 'mdi-receipt' },
+				{ link: '/facturas', icono: 'mdi-receipt' },
 				{ link: '/inicio', icono: 'mdi-file-document' },
 				{ link: '/inicio', icono: 'mdi-poll' },
 			];
