@@ -98,7 +98,6 @@
 						Registrar venta
 					</v-btn>
 					<Tabla :columnas="columnas" :filas="comprados" />
-					{{ items }}
 				</v-card-text>
 			</v-card>
 		</validation-observer>
@@ -176,7 +175,6 @@
 						}
 					});
 				});
-				console.log(this.items);
 				const factura = {
 					descripcion: this.documento.toString().toUpperCase(),
 					items: this.items,
