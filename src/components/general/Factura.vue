@@ -34,25 +34,6 @@
 				</v-card-actions>
 			</v-card>
 		</v-card>
-		<!--
-		<v-container>
-			<v-card class="ticket" v-if="idSeleccionado !== null">
-				<v-card-title>Factura #{{ idSeleccionado }}</v-card-title>
-				<v-card-subtitle>
-					Total <strong>{{ total | toUSD }}</strong>
-					<br />
-					Fecha
-					<strong>{{ this.facturasSeleccionada[0].fecha }}</strong>
-					<br />
-					Cliente:<strong> {{ documento }}</strong>
-				</v-card-subtitle>
-				<v-card-text>
-					<Tabla :columnas="columnas" :filas="Object.values(facturasSeleccionada)" />
-				</v-card-text>
-				<v-card-actions> </v-card-actions>
-			</v-card>
-		</v-container>
-		-->
 	</div>
 </template>
 
@@ -123,19 +104,3 @@
 		},
 	};
 </script>
-
-<style scoped>
-	.ticket {
-		background: radial-gradient(circle at 90% 10%, transparent 10px, #aee0e5 0);
-	}
-	.ticket {
-		background: radial-gradient(circle at right top, transparent 10px, #aee0e5 0) top left /
-				40% 51% no-repeat,
-			radial-gradient(circle at right bottom, transparent 10px, #aee0e5 0) bottom left /
-				40% 51% no-repeat,
-			radial-gradient(circle at left top, transparent 10px, #eeeeee 0) top right / 100%
-				51% no-repeat,
-			radial-gradient(circle at left bottom, transparent 10px, #eeeeee 0) bottom right /
-				100% 51% no-repeat;
-	}
-</style>
