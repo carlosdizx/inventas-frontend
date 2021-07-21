@@ -98,6 +98,7 @@
 						Registrar venta
 					</v-btn>
 					<Tabla :columnas="columnas" :filas="comprados" />
+					{{ items }}
 				</v-card-text>
 			</v-card>
 		</validation-observer>
@@ -168,6 +169,14 @@
 				'comprobarToken',
 			]),
 			async registrarFactura() {
+				this.productos.forEach((producto) => {
+					this.comprados.forEach((comprado) => {
+						if (comprado.producto === producto.nombre) {
+							this.items.push({ producto: producto, cantidad: comprado.cantidad });
+						}
+					});
+				});
+				console.log(this.items);
 				const factura = {
 					descripcion: this.documento.toString().toUpperCase(),
 					items: this.items,
@@ -213,27 +222,27 @@
 						let registrado = false;
 						this.comprados.forEach((comprado, index) => {
 							if (comprado.producto === this.productoSeleccionado) {
-								comprado.cantiad += this.cantidad;
+								comprado.cantidad += this.cantidad;
 								comprado.subTotal += comprado.precio * this.cantidad;
 								return (registrado = true);
 							}
 						});
 						if (!registrado) {
 							const subTotal = producto.precioVenta * this.cantidad;
-							this.comprados.push({
+							return this.comprados.push({
 								producto: producto.nombre,
 								precio: producto.precioVenta,
-								cantiad: this.cantidad,
+								cantidad: this.cantidad,
 								subTotal: subTotal,
 							});
-							return this.items.push({ producto: producto, cantidad: this.cantidad });
 						}
 					}
 				});
 				this.total = 0;
 				this.comprados.forEach((comprado) => {
-					this.total += comprado.precio * comprado.cantiad;
+					this.total += comprado.precio * comprado.cantidad;
 				});
+
 				this.cantidad = 1;
 				this.productoSeleccionado = null;
 			},
