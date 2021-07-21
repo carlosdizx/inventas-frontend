@@ -1,13 +1,13 @@
 import Vue from 'vue';
 import Vuex, { Commit, createLogger } from 'vuex';
-import { LOGUEAR } from '@/servicios/auth';
+import { LOGUEAR } from '@/services/auth';
 import router from '@/router';
 import {
 	AGREGAR_FACTURA,
-	LISTAR_CLIENTES,
-	LISTAR_FACTURAS,
+	LISTAR_CLIENTES, LISTAR_FACTURAS,
+	LISTAR_INFO_FACTURAS,
 	LISTAR_PRODUCTOS,
-} from '@/servicios/recursos';
+} from '@/services/recursos';
 import Swal from 'sweetalert2';
 
 Vue.use(Vuex);
@@ -97,6 +97,10 @@ export default new Vuex.Store({
 		listarFacturas(): any {
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
 			return LISTAR_FACTURAS(token.access_token);
+		},
+		listarInfoFacturas(): any {
+			const token: any = JSON.parse(<string>localStorage.getItem('token'));
+			return LISTAR_INFO_FACTURAS(token.access_token);
 		},
 		agregarFactura: ({ commit }, factura: any) => {
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));

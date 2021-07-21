@@ -163,7 +163,7 @@
 			...mapActions([
 				'listarProductos',
 				'listarClientes',
-				'listarFacturas',
+				'listarInfoFacturas',
 				'agregarFactura',
 				'comprobarToken',
 			]),
