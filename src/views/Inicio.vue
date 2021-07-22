@@ -34,7 +34,7 @@
 				{ link: '/inicio', icono: 'mdi-home' },
         { link: '/cajaregistradora', icono: 'mdi-cash-register' },
         { link: '/listados', icono: 'mdi-clipboard-list-outline' },
-				{ link: '/inicio', icono: 'mdi-plus-circle-outline' },
+				{ link: '/registro', icono: 'mdi-plus-circle-outline' },
 				{ link: '/inicio', icono: 'mdi-food-variant' },
 				{ link: '/inicio', icono: 'mdi-account-multiple' },
 				{ link: '/facturas', icono: 'mdi-receipt' },

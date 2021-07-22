@@ -1,7 +1,7 @@
 <template>
-	<div>
+	<v-card>
 		<ToolBarListados />
-	</div>
+	</v-card>
 </template>
 
 <script>
