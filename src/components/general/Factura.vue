@@ -20,8 +20,15 @@
 				</v-row>
 			</v-card-subtitle>
 			<v-card-actions>
-				<v-card class="ticket mx-auto" v-if="id !== 0 && mostrar">
-					<v-card-title class="ticket-info">Factura #{{ seleccionada.id }}</v-card-title>
+				<v-card
+					class="ticket mx-auto"
+					v-if="seleccionada.id !== 0 && mostrar"
+				>
+					<v-card-title class="ticket-info">
+						Factura #{{ seleccionada.id }}
+						<v-spacer />
+						<v-img max-width="60" src="@/assets/logo.png" />
+					</v-card-title>
 					<v-card-subtitle>
 						Total <strong>{{ this.seleccionada.total | toUSD }}</strong>
 						<br />
@@ -31,7 +38,7 @@
 						Cliente:<strong> {{ this.seleccionada.descripcion }}</strong>
 					</v-card-subtitle>
 					<v-card-actions>
-						<Tabla :columnas="columnas" :filas="Object.values(items)" />
+						<Tabla class="ticket" :columnas="columnas" :filas="Object.values(items)" />
 					</v-card-actions>
 				</v-card>
 			</v-card-actions>
@@ -56,47 +63,45 @@
 				total: 0,
 			},
 			facturas: [],
-			infoFacturas: [],
 			columnas: [],
 			mostrar: false,
 			items: [],
 		}),
 		methods: {
-			...mapActions(['listarFacturas', 'listarInfoFacturas']),
+			...mapActions(['listarFacturas']),
 			async cargarFacturas() {
 				const respuesta = await this.listarFacturas();
 				if (typeof respuesta.data.Mensaje === 'string') {
 					return;
 				}
 				this.facturas = respuesta.data.Mensaje;
-			},
-			async cargarInfoFacturas() {
-				const respuesta = await this.listarInfoFacturas();
-				if (typeof respuesta.data.Mensaje === 'string') {
-					return;
-				}
-				this.infoFacturas = respuesta.data.Mensaje;
-				this.columnas = Object.keys(this.infoFacturas[0]);
+				this.columnas = ['producto', 'precio', 'cantidad', 'subTotal'];
+				return (this.mostrar = true);
 			},
 			async buscarFactura() {
 				this.seleccionada.id = this.id;
 				this.items = [];
 				this.seleccionada.total = 0;
-				await this.infoFacturas.forEach((info) => {
-					if (info.id === this.id) {
-						this.items.push(info);
-						this.seleccionada.total += info.subTotal;
-            console.log(info)
+				this.facturas.forEach((factura) => {
+					if (factura.id === this.id) {
+						this.seleccionada.fecha = factura.fecha;
+						this.seleccionada.descripcion = factura.descripcion;
+						return factura.items.forEach((item) => {
+							this.items.push({
+								producto: item.producto.nombre,
+								precio: item.producto.precioVenta,
+								cantidad: item.cantidad,
+								subTotal: item.cantidad * item.producto.precioVenta,
+							});
+							this.seleccionada.total += item.cantidad * item.producto.precioVenta;
+						});
 					}
 				});
-
-				this.mostrar = true;
 			},
 		},
 		async mounted() {
 			try {
 				await this.cargarFacturas();
-				await this.cargarInfoFacturas();
 			} catch (e) {
 				await Swal.fire(
 					'No se pudo obtener las facturas',
@@ -111,7 +116,8 @@
 
 <style scoped>
 	.ticket {
-    color: #333;
+		background-color: lightyellow;
+		color: #333;
 		text-transform: uppercase;
 		font-weight: bold;
 		font-size: 11px;
@@ -120,23 +126,23 @@
 		border-top-style: dashed;
 		border-top-color: black;
 
-    border-bottom-width: 3px;
-    border-bottom-style: dashed;
-    border-bottom-color: black;
+		border-bottom-width: 3px;
+		border-bottom-style: dashed;
+		border-bottom-color: black;
 
-    border-left-width: 3px;
-    border-left-style: dashed;
-    border-left-color: black;
+		border-left-width: 3px;
+		border-left-style: dashed;
+		border-left-color: black;
 
-    border-right-width: 3px;
-    border-right-style: dashed;
-    border-right-color: black;
+		border-right-width: 3px;
+		border-right-style: dashed;
+		border-right-color: black;
 	}
 
-  .ticket-info{
-    border-bottom-width: 3px;
-    border-bottom-style: dashed;
-    border-bottom-color: black;
-    margin-bottom: 10%;
-  }
+	.ticket-info {
+		border-bottom-width: 3px;
+		border-bottom-style: dashed;
+		border-bottom-color: black;
+		margin-bottom: 10%;
+	}
 </style>

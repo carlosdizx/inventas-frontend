@@ -98,10 +98,6 @@ export default new Vuex.Store({
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
 			return LISTAR_FACTURAS(token.access_token);
 		},
-		listarInfoFacturas(): any {
-			const token: any = JSON.parse(<string>localStorage.getItem('token'));
-			return LISTAR_INFO_FACTURAS(token.access_token);
-		},
 		agregarFactura: ({ commit }, factura: any) => {
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
 			return AGREGAR_FACTURA(token.access_token, factura);

@@ -24,13 +24,6 @@ export const LISTAR_FACTURAS = async (token: any) =>
 		},
 	});
 
-export const LISTAR_INFO_FACTURAS = async (token: any) =>
-	await INSTANCIA.get('/api/facturas/all/info', {
-		headers: {
-			Authorization: 'Bearer ' + token,
-		},
-	});
-
 export const AGREGAR_FACTURA = async (token: any, factura: any) =>
 	await INSTANCIA.post('/api/facturas/all', factura, {
 		headers: {
