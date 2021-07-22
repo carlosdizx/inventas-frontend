@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<v-card class="mx-auto" max-width="600">
-			<v-card-title>Listado de Facturas</v-card-title>
+			<v-card-title>Buscar facturas</v-card-title>
 			<v-card-subtitle>
 				<v-row>
 					<v-col cols="5">

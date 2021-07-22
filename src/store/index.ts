@@ -5,7 +5,6 @@ import router from '@/router';
 import {
 	AGREGAR_FACTURA,
 	LISTAR_CLIENTES, LISTAR_FACTURAS,
-	LISTAR_INFO_FACTURAS,
 	LISTAR_PRODUCTOS,
 } from '@/services/recursos';
 import Swal from 'sweetalert2';
@@ -64,7 +63,7 @@ export default new Vuex.Store({
 		},
 		comprobarToken: async ({ commit, dispatch, state }) => {
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
-			if (state.token === null || token !== null) {
+			if (state.token !== null || token !== null) {
 				await dispatch('listarClientes', Array()).catch(async (reason) => {
 					commit('ASIGNAR_USUARIO', {});
 					commit('ASIGNAR_TOKEN', null);
