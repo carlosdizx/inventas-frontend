@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-card class="mx-auto" max-width="700">
+		<v-card class="mx-auto" max-width="600">
 			<v-card-title>Listado de Facturas</v-card-title>
 			<v-card-subtitle>
 				<v-row>
@@ -19,20 +19,22 @@
 					</v-col>
 				</v-row>
 			</v-card-subtitle>
-			<v-card v-if="id !== 0 && mostrar">
-				<v-card-title>Factura #{{ seleccionada.id }}</v-card-title>
-				<v-card-subtitle>
-					Total <strong>{{ this.seleccionada.total | toUSD }}</strong>
-					<br />
-					Fecha de compra
-					<strong>{{ this.seleccionada.fecha | formatDate }}</strong>
-					<br />
-					Cliente:<strong> {{ this.seleccionada.descripcion }}</strong>
-				</v-card-subtitle>
-				<v-card-actions>
-					<Tabla :columnas="columnas" :filas="Object.values(items)" />
-				</v-card-actions>
-			</v-card>
+			<v-card-actions>
+				<v-card class="mx-auto" v-if="id !== 0 && mostrar">
+					<v-card-title>Factura #{{ seleccionada.id }}</v-card-title>
+					<v-card-subtitle>
+						Total <strong>{{ this.seleccionada.total | toUSD }}</strong>
+						<br />
+						Fecha de compra
+						<strong>{{ this.seleccionada.fecha | formatDate }}</strong>
+						<br />
+						Cliente:<strong> {{ this.seleccionada.descripcion }}</strong>
+					</v-card-subtitle>
+					<v-card-actions>
+						<Tabla :columnas="columnas" :filas="Object.values(items)" />
+					</v-card-actions>
+				</v-card>
+			</v-card-actions>
 		</v-card>
 	</div>
 </template>
@@ -78,6 +80,7 @@
 				this.columnas = Object.keys(this.infoFacturas[0]);
 			},
 			async buscarFactura() {
+				this.seleccionada.id = this.id;
 				this.items = [];
 				this.seleccionada.total = 0;
 				await this.infoFacturas.forEach((info) => {
@@ -86,9 +89,8 @@
 						this.seleccionada.total += info.subTotal;
 					}
 				});
-				this.seleccionada.id = this.items[0].id;
-				this.seleccionada.descripcion = this.items[0].descripcion;
-				this.seleccionada.fecha = this.items[0].fecha;
+        this.seleccionada.fecha = this.facturas[0].fecha;
+        this.seleccionada.descripcion = this.facturas[0].descripcion;
 				this.mostrar = true;
 			},
 		},
