@@ -6,7 +6,11 @@
 			<v-card-text>
 				<v-form>
 					<v-text-field label="Nombres y apellidos" prepend-icon="mdi-account" counter />
-					<v-text-field label="Documento de identidad" prepend-icon="mdi-card-account-details-outline" counter />
+					<v-text-field
+						label="Documento de identidad"
+						prepend-icon="mdi-card-account-details-outline"
+						counter
+					/>
 					<v-text-field label="Celular" type="number" prepend-icon="mdi-phone" counter />
 				</v-form>
 			</v-card-text>
