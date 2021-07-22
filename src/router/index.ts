@@ -22,7 +22,7 @@ const routes: Array<RouteConfig> = [
 	{
 		path: '/listados',
 		name: 'Forms',
-		component: () => import('../views/Listado.vue'),
+		component: () => import('../views/listados/Listado.vue'),
 	},
 	{
 		path: '/cajaregistradora',
@@ -32,7 +32,7 @@ const routes: Array<RouteConfig> = [
 	{
 		path: '/facturas',
 		name: 'ListadosFacturas',
-		component: () => import('../views/ListadosFacturas.vue'),
+		component: () => import('../views/listados/ListadosFacturas.vue'),
 	},
 ];
 

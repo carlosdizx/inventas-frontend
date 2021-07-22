@@ -5,7 +5,7 @@
 </template>
 
 <script>
-	import ToolBarListados from '../components/listados/ToolBarListados';
+	import ToolBarListados from '../../components/listados/ToolBarListados';
 	export default {
 		name: 'Listados',
 		components: {

@@ -17,7 +17,7 @@
 </template>
 
 <script>
-	import Factura from '../components/general/Factura';
+	import Factura from '../../components/general/Factura';
 
 	export default {
 		name: 'ListadosFacturas',
