@@ -13,7 +13,7 @@
 						/>
 					</v-col>
 					<v-col cols="6">
-						<v-btn block :disabled="!id" color="success" @click="buscarFactura">
+						<v-btn block :disabled="!id" color="primary" @click="buscarFactura">
 							Buscar factura
 						</v-btn>
 					</v-col>
