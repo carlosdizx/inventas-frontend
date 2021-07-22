@@ -20,8 +20,8 @@
 				</v-row>
 			</v-card-subtitle>
 			<v-card-actions>
-				<v-card class="mx-auto" v-if="id !== 0 && mostrar">
-					<v-card-title>Factura #{{ seleccionada.id }}</v-card-title>
+				<v-card class="ticket mx-auto" v-if="id !== 0 && mostrar">
+					<v-card-title class="ticket-info">Factura #{{ seleccionada.id }}</v-card-title>
 					<v-card-subtitle>
 						Total <strong>{{ this.seleccionada.total | toUSD }}</strong>
 						<br />
@@ -43,7 +43,6 @@
 	import Tabla from './Tabla';
 	import { mapActions } from 'vuex';
 	import Swal from 'sweetalert2';
-	import router from '@/router';
 
 	export default {
 		name: 'Factura',
@@ -89,8 +88,8 @@
 						this.seleccionada.total += info.subTotal;
 					}
 				});
-        this.seleccionada.fecha = this.facturas[0].fecha;
-        this.seleccionada.descripcion = this.facturas[0].descripcion;
+				this.seleccionada.fecha = this.facturas[0].fecha;
+				this.seleccionada.descripcion = this.facturas[0].descripcion;
 				this.mostrar = true;
 			},
 		},
@@ -104,8 +103,40 @@
 					'No se te concedio acceso',
 					'warning'
 				);
-				await this.$router.push('inicio');
+				await this.$router.push('/inicio');
 			}
 		},
 	};
 </script>
+
+<style scoped>
+	.ticket {
+    color: #333;
+		text-transform: uppercase;
+		font-weight: bold;
+		font-size: 11px;
+
+		border-top-width: 3px;
+		border-top-style: dashed;
+		border-top-color: black;
+
+    border-bottom-width: 3px;
+    border-bottom-style: dashed;
+    border-bottom-color: black;
+
+    border-left-width: 3px;
+    border-left-style: dashed;
+    border-left-color: black;
+
+    border-right-width: 3px;
+    border-right-style: dashed;
+    border-right-color: black;
+	}
+
+  .ticket-info{
+    border-bottom-width: 3px;
+    border-bottom-style: dashed;
+    border-bottom-color: black;
+    margin-bottom: 10%;
+  }
+</style>
