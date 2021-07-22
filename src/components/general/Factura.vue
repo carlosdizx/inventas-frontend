@@ -86,10 +86,10 @@
 					if (info.id === this.id) {
 						this.items.push(info);
 						this.seleccionada.total += info.subTotal;
+            console.log(info)
 					}
 				});
-				this.seleccionada.fecha = this.facturas[0].fecha;
-				this.seleccionada.descripcion = this.facturas[0].descripcion;
+
 				this.mostrar = true;
 			},
 		},
