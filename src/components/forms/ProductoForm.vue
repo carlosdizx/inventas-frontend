@@ -9,7 +9,7 @@
 						<validation-provider
 							v-slot="{ errors }"
 							name="Nombre"
-							rules="required|min:5|max:20"
+							rules="required|min:5|max:100"
 						>
 							<v-text-field
 								v-model="nombre"
