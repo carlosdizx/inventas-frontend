@@ -25,7 +25,7 @@
 					Total <strong>{{ this.seleccionada.total | toUSD }}</strong>
 					<br />
 					Fecha de compra
-					<strong>{{ this.seleccionada.fecha }}</strong>
+					<strong>{{ this.seleccionada.fecha | formatDate }}</strong>
 					<br />
 					Cliente:<strong> {{ this.seleccionada.descripcion }}</strong>
 				</v-card-subtitle>
@@ -41,6 +41,8 @@
 	import Tabla from './Tabla';
 	import { mapActions } from 'vuex';
 	import Swal from 'sweetalert2';
+	import router from '@/router';
+
 	export default {
 		name: 'Factura',
 		components: { Tabla },
@@ -100,6 +102,7 @@
 					'No se te concedio acceso',
 					'warning'
 				);
+				await this.$router.push('inicio');
 			}
 		},
 	};
