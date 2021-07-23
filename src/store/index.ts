@@ -4,7 +4,9 @@ import { LOGUEAR } from '@/services/auth';
 import router from '@/router';
 import {
 	AGREGAR_FACTURA,
-	LISTAR_CLIENTES, LISTAR_FACTURAS,
+	AGREGAR_PRODUCTOS,
+	LISTAR_CLIENTES,
+	LISTAR_FACTURAS,
 	LISTAR_PRODUCTOS,
 } from '@/services/recursos';
 import Swal from 'sweetalert2';
@@ -89,6 +91,10 @@ export default new Vuex.Store({
 		listarProductos(): any {
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
 			return LISTAR_PRODUCTOS(token.access_token);
+		},
+		agregarProductos({ commit }, producto: any): any {
+			const token: any = JSON.parse(<string>localStorage.getItem('token'));
+			return AGREGAR_PRODUCTOS(token.access_token,producto);
 		},
 		//------------------------------------------------------------------------------------------------------------
 		//------------------------------------------------- FACTURAS -------------------------------------------------

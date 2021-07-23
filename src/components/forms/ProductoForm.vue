@@ -27,7 +27,7 @@
 						>
 							<v-text-field
 								v-model.number="compra"
-								label="Precio de compra"
+								label="Precio de compra o produccion"
 								prepend-icon="mdi-cash-multiple"
 								type="number"
 								required
@@ -53,7 +53,9 @@
 					</v-form>
 				</v-card-text>
 				<v-card-actions>
-					<v-btn block color="success">Registrar</v-btn>
+					<v-btn :disabled="invalid" block color="success" @click="agregarProducto"
+						>Registrar</v-btn
+					>
 				</v-card-actions>
 			</v-card>
 		</validation-observer>
@@ -68,6 +70,8 @@
 		ValidationProvider,
 		setInteractionMode,
 	} from 'vee-validate';
+	import { mapActions } from 'vuex';
+	import Swal from 'sweetalert2';
 
 	{
 		setInteractionMode('eager');
@@ -105,5 +109,41 @@
 			compra: null,
 			venta: null,
 		}),
+		methods: {
+			...mapActions(['comprobarToken', 'agregarProductos']),
+			async agregarProducto() {
+				const producto = {
+					nombre: this.nombre,
+					precioCompra: this.compra,
+					precioVenta: this.venta,
+				};
+				try {
+					const respuesta = await this.agregarProductos(producto);
+					if (typeof respuesta.data.Mensaje === 'string') {
+						return await Swal.fire('Alerta', `${respuesta.data.Mensaje}`, 'info');
+					}
+					this.nombre = '';
+					this.compra = null;
+					this.venta = null;
+					return await Swal.fire(
+						'Registro exitoso',
+						'Se registro el producto 👌😎',
+						'success'
+					);
+				} catch (e) {
+					await Swal.fire(
+						'Error',
+						`Asegurarte de que el producto/servicio no este registrado
+                <br/> el nombre debe ser unico
+                <br/>
+                ${e.message}`,
+						'error'
+					);
+				}
+			},
+		},
+		async created() {
+			await this.comprobarToken();
+		},
 	};
 </script>

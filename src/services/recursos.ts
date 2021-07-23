@@ -16,6 +16,14 @@ export const LISTAR_PRODUCTOS = async (token: any) =>
 		},
 	});
 
+export const AGREGAR_PRODUCTOS = async (token: any,productos:any) =>
+	await INSTANCIA.post('/api/productos/all', productos,{
+		headers: {
+			Authorization: 'Bearer ' + token,
+			'Content-Type': 'application/json',
+		},
+	});
+
 // -------------------- FACTURA -----------------
 export const LISTAR_FACTURAS = async (token: any) =>
 	await INSTANCIA.get('/api/facturas/all', {
