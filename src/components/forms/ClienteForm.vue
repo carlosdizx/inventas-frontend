@@ -52,7 +52,9 @@
 					</v-form>
 				</v-card-text>
 				<v-card-actions>
-					<v-btn block color="success">Registrar</v-btn>
+					<v-btn :disabled="invalid" block color="success" @click="registrarCliente">
+						Registrar
+					</v-btn>
 				</v-card-actions>
 			</v-card>
 		</validation-observer>
@@ -67,6 +69,8 @@
 		ValidationProvider,
 		setInteractionMode,
 	} from 'vee-validate';
+	import { mapActions } from 'vuex';
+	import Swal from 'sweetalert2';
 
 	{
 		setInteractionMode('eager');
@@ -104,6 +108,42 @@
 			documento: '',
 			celular: '',
 		}),
+		async created() {
+			await this.comprobarToken();
+		},
+		methods: {
+			...mapActions(['comprobarToken', 'agregarCliente']),
+			async registrarCliente() {
+				const cliente = {
+					nombres: this.nombres,
+					documento: this.documento,
+					celular: this.celular,
+				};
+				try {
+					const respuesta = await this.agregarCliente(cliente);
+					if (typeof respuesta.data.Mensaje === 'string') {
+						return await Swal.fire('Alerta', `${respuesta.data.Mensaje}`, 'info');
+					}
+					this.nombres = '';
+					this.documento = '';
+					this.celular = '';
+					return await Swal.fire(
+						'Registro exitoso',
+						'Se registro el cliente 👌😎',
+						'success'
+					);
+				} catch (e) {
+					await Swal.fire(
+						'Error',
+						`Asegurarte que el cliente no este registrado
+                <br/> documento de identidad unico para cada cliete
+                <br/>
+                ${e.message}`,
+						'error'
+					);
+				}
+			},
+		},
 	};
 </script>
 

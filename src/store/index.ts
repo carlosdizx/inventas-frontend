@@ -3,8 +3,9 @@ import Vuex, { Commit, createLogger } from 'vuex';
 import { LOGUEAR } from '@/services/auth';
 import router from '@/router';
 import {
+	AGREGAR_CLIENTE,
 	AGREGAR_FACTURA,
-	AGREGAR_PRODUCTOS,
+	AGREGAR_PRODUCTO,
 	LISTAR_CLIENTES,
 	LISTAR_FACTURAS,
 	LISTAR_PRODUCTOS,
@@ -85,6 +86,10 @@ export default new Vuex.Store({
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
 			return LISTAR_CLIENTES(token.access_token);
 		},
+		agregarCliente({ commit }, cliente: any): any {
+			const token: any = JSON.parse(<string>localStorage.getItem('token'));
+			return AGREGAR_CLIENTE(token.access_token,cliente);
+		},
 		//------------------------------------------------------------------------------------------------------------
 		//------------------------------------------------- PRODUCTOS -------------------------------------------------
 		//------------------------------------------------------------------------------------------------------------
@@ -92,9 +97,9 @@ export default new Vuex.Store({
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
 			return LISTAR_PRODUCTOS(token.access_token);
 		},
-		agregarProductos({ commit }, producto: any): any {
+		agregarProducto({ commit }, producto: any): any {
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
-			return AGREGAR_PRODUCTOS(token.access_token,producto);
+			return AGREGAR_PRODUCTO(token.access_token,producto);
 		},
 		//------------------------------------------------------------------------------------------------------------
 		//------------------------------------------------- FACTURAS -------------------------------------------------

@@ -8,7 +8,7 @@
 					</v-btn>
 				</router-link>
 			</v-app-bar-nav-icon>
-			<v-toolbar-title>Listados</v-toolbar-title>
+			<v-toolbar-title>Registros</v-toolbar-title>
 		</v-toolbar>
 		<v-tabs background-color="blue darken-3" color="white">
 			<v-tab v-for="(tab, index) in tabs" :key="index" @click="cambiarIndex(index + 1)">

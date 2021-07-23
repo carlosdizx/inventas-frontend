@@ -8,6 +8,14 @@ export const LISTAR_CLIENTES = async (token: any) =>
 		},
 	});
 
+export const AGREGAR_CLIENTE = async (token: any,cliente:any) =>
+	await INSTANCIA.post('/api/clientes/all', cliente,{
+		headers: {
+			Authorization: 'Bearer ' + token,
+			'Content-Type': 'application/json',
+		},
+	});
+
 // -------------------- PRODUCTO -----------------
 export const LISTAR_PRODUCTOS = async (token: any) =>
 	await INSTANCIA.get('/api/productos/all', {
@@ -16,7 +24,7 @@ export const LISTAR_PRODUCTOS = async (token: any) =>
 		},
 	});
 
-export const AGREGAR_PRODUCTOS = async (token: any,productos:any) =>
+export const AGREGAR_PRODUCTO = async (token: any, productos:any) =>
 	await INSTANCIA.post('/api/productos/all', productos,{
 		headers: {
 			Authorization: 'Bearer ' + token,

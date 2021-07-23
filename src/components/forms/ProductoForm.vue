@@ -53,7 +53,7 @@
 					</v-form>
 				</v-card-text>
 				<v-card-actions>
-					<v-btn :disabled="invalid" block color="success" @click="agregarProducto"
+					<v-btn :disabled="invalid" block color="success" @click="registrarProducto"
 						>Registrar</v-btn
 					>
 				</v-card-actions>
@@ -110,15 +110,15 @@
 			venta: null,
 		}),
 		methods: {
-			...mapActions(['comprobarToken', 'agregarProductos']),
-			async agregarProducto() {
+			...mapActions(['comprobarToken', 'agregarProducto']),
+			async registrarProducto() {
 				const producto = {
 					nombre: this.nombre,
 					precioCompra: this.compra,
 					precioVenta: this.venta,
 				};
 				try {
-					const respuesta = await this.agregarProductos(producto);
+					const respuesta = await this.agregarProducto(producto);
 					if (typeof respuesta.data.Mensaje === 'string') {
 						return await Swal.fire('Alerta', `${respuesta.data.Mensaje}`, 'info');
 					}
