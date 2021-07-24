@@ -15,22 +15,25 @@
 				<v-icon>{{ tab }}</v-icon>
 			</v-tab>
 		</v-tabs>
-		<ProductoForm v-if="index===1"/>
-		<ClienteForm v-if="index===2"/>
+		<ProductoForm v-if="index === 1" />
+		<ClienteForm v-if="index === 2" />
+		<InventarioForm v-if="index === 3" />
 	</v-card>
 </template>
 
 <script>
 	import ProductoForm from '../../components/forms/ProductoForm';
 	import ClienteForm from '../../components/forms/ClienteForm';
+	import InventarioForm from '../../components/forms/InventarioForm';
 	export default {
 		name: 'Registro',
 		components: {
 			ProductoForm,
 			ClienteForm,
+			InventarioForm,
 		},
 		data: () => ({
-			tabs: ['mdi-archive','mdi-account-outline'],
+			tabs: ['mdi-archive', 'mdi-account-outline', 'mdi-warehouse'],
 			index: 1,
 		}),
 		methods: {

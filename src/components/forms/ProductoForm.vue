@@ -53,9 +53,9 @@
 					</v-form>
 				</v-card-text>
 				<v-card-actions>
-					<v-btn :disabled="invalid" block color="success" @click="registrarProducto"
-						>Registrar</v-btn
-					>
+					<v-btn :disabled="invalid" block color="success" @click="registrarProducto">
+						Registrar
+					</v-btn>
 				</v-card-actions>
 			</v-card>
 		</validation-observer>
