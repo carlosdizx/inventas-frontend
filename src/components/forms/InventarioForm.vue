@@ -17,15 +17,21 @@
 						</validation-provider>
 						<v-row>
 							<v-col cols="8">
-								<v-text-field prepend-icon="mdi-barcode" label="Codigo de barras" />
+								{{ codigo }}
+								<v-text-field
+									v-model="codigo"
+									prepend-icon="mdi-barcode"
+									label="Codigo de barras"
+								/>
 							</v-col>
 							<br />
 							<v-col cols="2">
 								<v-btn block @click="display = !display">
-									{{display?'Mostrar':'Ocultar'}}<v-icon>mdi-barcode-scan</v-icon>
+									{{ display ? 'Ocultar' : 'Mostrar' }}<v-icon>mdi-barcode-scan</v-icon>
 								</v-btn>
 							</v-col>
 						</v-row>
+						<Quagga v-on:dar-codigo="codigo" v-if="display" />
 					</v-form>
 				</v-card-text>
 				<v-card-actions> </v-card-actions>
@@ -42,6 +48,8 @@
 		ValidationProvider,
 		setInteractionMode,
 	} from 'vee-validate';
+	import LectorBarras from '../general/LectorBarras';
+	import Quagga from '../general/Quagga';
 
 	{
 		setInteractionMode('eager');
@@ -74,9 +82,10 @@
 
 	export default {
 		name: 'InventarioForm',
-		components: { ValidationProvider, ValidationObserver },
+		components: { ValidationProvider, ValidationObserver, LectorBarras,Quagga },
 		data: () => ({
 			display: false,
+			codigo: 'xdas',
 		}),
 		methods: {},
 	};
