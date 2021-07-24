@@ -16,19 +16,23 @@
 							/>
 						</validation-provider>
 						<v-row>
-							<v-col cols="8">
-								{{ codigo }}
+							<v-col cols="1">
+								<v-btn
+									class="mt-5 ml-2"
+									@click="display = !display"
+									icon
+									:color="display ? 'success' : 'red'"
+								>
+									<v-icon>
+										mdi-barcode-scan
+									</v-icon>
+								</v-btn>
+							</v-col>
+							<v-col class="ml-5" cols="10">
 								<v-text-field
 									v-model="codigo"
-									prepend-icon="mdi-barcode"
 									label="Codigo de barras"
 								/>
-							</v-col>
-							<br />
-							<v-col cols="2">
-								<v-btn block @click="display = !display">
-									{{ display ? 'Ocultar' : 'Mostrar' }}<v-icon>mdi-barcode-scan</v-icon>
-								</v-btn>
 							</v-col>
 						</v-row>
 						<Quagga v-on:dar-codigo="codigo" v-if="display" />
@@ -82,10 +86,10 @@
 
 	export default {
 		name: 'InventarioForm',
-		components: { ValidationProvider, ValidationObserver, LectorBarras,Quagga },
+		components: { ValidationProvider, ValidationObserver, LectorBarras, Quagga },
 		data: () => ({
 			display: false,
-			codigo: 'xdas',
+			codigo: '',
 		}),
 		methods: {},
 	};
