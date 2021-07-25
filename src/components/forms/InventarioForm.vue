@@ -33,7 +33,7 @@
 								<v-text-field v-model="codigo" label="Codigo de barras" />
 							</v-col>
 						</v-row>
-						<v-btn :disabled="codigo === ''">
+						<v-btn :disabled="codigo === '' || producto === ''" @click="agregarActivo">
 							<v-icon>mdi-shape-plus</v-icon>
 							Agregar codigo
 						</v-btn>
@@ -46,7 +46,6 @@
 									: 'Lector desactivado, solo compatible en computador'
 							}}
 						</v-alert>
-
 						<v-card class="camara mx-auto" height="500" width="500">
 							<Quagga @codigo="codigo = $event" v-if="display" />
 						</v-card>
