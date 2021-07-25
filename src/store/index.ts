@@ -5,9 +5,11 @@ import router from '@/router';
 import {
 	AGREGAR_CLIENTE,
 	AGREGAR_FACTURA,
+	AGREGAR_INVENTARIO,
 	AGREGAR_PRODUCTO,
 	LISTAR_CLIENTES,
 	LISTAR_FACTURAS,
+	LISTAR_INVENTARIOS,
 	LISTAR_PRODUCTOS,
 } from '@/services/recursos';
 import Swal from 'sweetalert2';
@@ -88,7 +90,7 @@ export default new Vuex.Store({
 		},
 		agregarCliente({ commit }, cliente: any): any {
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
-			return AGREGAR_CLIENTE(token.access_token,cliente);
+			return AGREGAR_CLIENTE(token.access_token, cliente);
 		},
 		//------------------------------------------------------------------------------------------------------------
 		//------------------------------------------------- PRODUCTOS -------------------------------------------------
@@ -99,7 +101,7 @@ export default new Vuex.Store({
 		},
 		agregarProducto({ commit }, producto: any): any {
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
-			return AGREGAR_PRODUCTO(token.access_token,producto);
+			return AGREGAR_PRODUCTO(token.access_token, producto);
 		},
 		//------------------------------------------------------------------------------------------------------------
 		//------------------------------------------------- FACTURAS -------------------------------------------------
@@ -111,6 +113,18 @@ export default new Vuex.Store({
 		agregarFactura: ({ commit }, factura: any) => {
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
 			return AGREGAR_FACTURA(token.access_token, factura);
+		},
+		//------------------------------------------------------------------------------------------------------------
+		//------------------------------------------------- INVENTARIOS -------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------
+		listarInventarios(): any {
+			const token: any = JSON.parse(<string>localStorage.getItem('token'));
+			return LISTAR_INVENTARIOS(token.access_token);
+		},
+		agregarInventarios: ({ commit }, inventario: any) => {
+			console.log(inventario);
+			const token: any = JSON.parse(<string>localStorage.getItem('token'));
+			return AGREGAR_INVENTARIO(token.access_token, inventario);
 		},
 	},
 	modules: {},

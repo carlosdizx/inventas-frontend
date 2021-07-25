@@ -47,3 +47,19 @@ export const AGREGAR_FACTURA = async (token: any, factura: any) =>
 			'Content-Type': 'application/json',
 		},
 	});
+
+// -------------------- INVENTARIO -----------------
+export const LISTAR_INVENTARIOS = async (token: any) =>
+	await INSTANCIA.get('/api/inventarios/all', {
+		headers: {
+			Authorization: 'Bearer ' + token,
+		},
+	});
+
+export const AGREGAR_INVENTARIO = async (token: any, inventario: any) =>
+	await INSTANCIA.post('/api/inventarios/all', inventario, {
+		headers: {
+			Authorization: 'Bearer ' + token,
+			'Content-Type': 'application/json',
+		},
+	});

@@ -48,7 +48,11 @@
 									: 'Lector desactivado, solo compatible en computador'
 							}}
 						</v-alert>
-						<v-btn :disabled="activos.length === 0" color="success">
+						<v-btn
+							@click="registrarInvetario"
+							:disabled="activos.length === 0"
+							color="success"
+						>
 							Registrar inventario
 						</v-btn>
 						<br />
@@ -128,7 +132,7 @@
 			columnas: ['Producto', 'Codigo de barras'],
 		}),
 		methods: {
-			...mapActions(['comprobarToken', 'listarProductos']),
+			...mapActions(['comprobarToken', 'listarProductos', 'agregarInventarios']),
 			async agregarActivo() {
 				let agregar = true;
 				this.items.forEach((item) => {
@@ -154,6 +158,27 @@
 					'Codigo de barras repetido, ya esta agregado',
 					'warning'
 				);
+			},
+			async registrarInvetario() {
+				try {
+					const respuesta = await this.agregarInventarios( this.activos );
+					if (typeof respuesta.data.Mensaje === 'string') {
+						return await Swal.fire('Alerta', `${respuesta.data.Mensaje}`, 'info');
+					}
+					console.log();
+					this.display = false;
+					this.codigo = '';
+					this.producto = '';
+					this.items = [];
+					this.activos = [];
+					return await Swal.fire(
+						'Registro exitoso!',
+						'Se registro el inventario correctamente',
+						'success'
+					);
+				} catch (e) {
+					await Swal.fire('Alerta', `No se pudo agregar el invetario`, 'info');
+				}
 			},
 		},
 		async created() {
