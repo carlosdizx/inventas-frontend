@@ -166,7 +166,7 @@
 			},
 			async registrarInvetario() {
 				try {
-					const activos = {activos:this.activos};
+					const activos = { activos: this.activos };
 					const respuesta = await this.agregarInventarios(activos);
 					if (typeof respuesta.data.Mensaje === 'string') {
 						return await Swal.fire('Alerta', `${respuesta.data.Mensaje}`, 'info');
@@ -179,7 +179,8 @@
 					this.activos = [];
 					return await Swal.fire(
 						'Registro exitoso!',
-						'Se registro el inventario correctamente',
+						`Se registro el inventario correctamente<br>
+                Inventario #${respuesta.data.Mensaje.id}`,
 						'success'
 					);
 				} catch (e) {
