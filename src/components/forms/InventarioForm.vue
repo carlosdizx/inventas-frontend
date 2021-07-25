@@ -8,8 +8,9 @@
 					<v-form>
 						<validation-provider v-slot="{ errors }" name="Nombre" rules="required">
 							<v-select
+								v-model="producto"
 								label="Seleccione un producto"
-								prepend-icon="mdi-home"
+								prepend-icon="mdi-view-grid-plus-outline"
 								required
 								:error-messages="errors"
 								counter
@@ -32,9 +33,20 @@
 								<v-text-field v-model="codigo" label="Codigo de barras" />
 							</v-col>
 						</v-row>
-						<v-alert :color="display ? 'success' : 'red'">
-							{{ display ? 'Lector activado' : 'Lector desactivado' }}
+						<v-btn :disabled="codigo === ''">
+							<v-icon>mdi-shape-plus</v-icon>
+							Agregar codigo
+						</v-btn>
+						<br />
+						<br />
+						<v-alert dark dense :color="display ? 'success' : 'red'">
+							{{
+								display
+									? 'Lector activado, solo compatible en computador'
+									: 'Lector desactivado, solo compatible en computador'
+							}}
 						</v-alert>
+
 						<v-card class="camara mx-auto" height="500" width="500">
 							<Quagga @codigo="codigo = $event" v-if="display" />
 						</v-card>
@@ -92,8 +104,16 @@
 		data: () => ({
 			display: false,
 			codigo: '',
+			producto: '',
+			activos: [],
 		}),
-		methods: {},
+		methods: {
+			async agregarActivo() {
+				await this.activos.push({ producto: this.producto, codigo: this.codigo });
+				this.producto = '';
+				this.codigo = '';
+			},
+		},
 	};
 </script>
 
