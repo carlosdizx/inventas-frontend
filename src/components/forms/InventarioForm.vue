@@ -92,6 +92,7 @@
 		data: () => ({
 			display: false,
 			codigo: '',
+
 		}),
 		methods: {},
 	};
