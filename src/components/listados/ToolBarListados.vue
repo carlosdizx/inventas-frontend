@@ -27,7 +27,9 @@
 				</v-tab>
 			</v-tabs>
 			<v-btn disabled text>
-				{{ indice === 1 ? 'Clientes' : indice === 2 ? 'Productos/Servicios' : 'Inventario' }}
+				{{
+					indice === 1 ? 'Clientes' : indice === 2 ? 'Productos/Servicios' : 'Inventario'
+				}}
 			</v-btn>
 		</v-card>
 		<div v-if="indice === 1">
@@ -121,9 +123,7 @@
 				this.inventarios.forEach((inventario) => {
 					inventario.activos = inventario.activos.length;
 				});
-				if (this.inventarios.length > 0) {
-					this.columnas_inventarios = Object.keys(this.inventarios[0]);
-				}
+				this.columnas_inventarios = Object.keys(this.inventarios[0]);
 			},
 			cambiarIndex(index) {
 				this.indice = index;
