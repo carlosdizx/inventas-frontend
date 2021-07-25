@@ -122,7 +122,6 @@ export default new Vuex.Store({
 			return LISTAR_INVENTARIOS(token.access_token);
 		},
 		agregarInventarios: ({ commit }, inventario: any) => {
-			console.log(inventario);
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
 			return AGREGAR_INVENTARIO(token.access_token, inventario);
 		},

@@ -8,8 +8,8 @@ export const LISTAR_CLIENTES = async (token: any) =>
 		},
 	});
 
-export const AGREGAR_CLIENTE = async (token: any,cliente:any) =>
-	await INSTANCIA.post('/api/clientes/all', cliente,{
+export const AGREGAR_CLIENTE = async (token: any, cliente: any) =>
+	await INSTANCIA.post('/api/clientes/all', cliente, {
 		headers: {
 			Authorization: 'Bearer ' + token,
 			'Content-Type': 'application/json',
@@ -24,8 +24,8 @@ export const LISTAR_PRODUCTOS = async (token: any) =>
 		},
 	});
 
-export const AGREGAR_PRODUCTO = async (token: any, productos:any) =>
-	await INSTANCIA.post('/api/productos/all', productos,{
+export const AGREGAR_PRODUCTO = async (token: any, productos: any) =>
+	await INSTANCIA.post('/api/productos/all', productos, {
 		headers: {
 			Authorization: 'Bearer ' + token,
 			'Content-Type': 'application/json',

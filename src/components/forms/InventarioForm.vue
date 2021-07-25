@@ -132,7 +132,12 @@
 			columnas: ['Producto', 'Codigo de barras'],
 		}),
 		methods: {
-			...mapActions(['comprobarToken', 'listarProductos', 'agregarInventarios']),
+			...mapActions([
+				'comprobarToken',
+				'listarProductos',
+				'agregarInventarios',
+				'listarInventarios',
+			]),
 			async agregarActivo() {
 				let agregar = true;
 				this.items.forEach((item) => {
@@ -161,7 +166,8 @@
 			},
 			async registrarInvetario() {
 				try {
-					const respuesta = await this.agregarInventarios( this.activos );
+					const activos = {activos:this.activos};
+					const respuesta = await this.agregarInventarios(activos);
 					if (typeof respuesta.data.Mensaje === 'string') {
 						return await Swal.fire('Alerta', `${respuesta.data.Mensaje}`, 'info');
 					}
@@ -178,14 +184,17 @@
 					);
 				} catch (e) {
 					await Swal.fire('Alerta', `No se pudo agregar el invetario`, 'info');
+					console.log(e);
 				}
 			},
 		},
 		async created() {
 			try {
 				await this.comprobarToken();
+				console.log(await this.listarInventarios());
 			} catch (e) {
 				console.log('No se pudo comprobar el token');
+				console.log(e);
 			}
 		},
 		async mounted() {
