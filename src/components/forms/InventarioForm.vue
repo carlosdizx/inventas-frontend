@@ -56,16 +56,16 @@
 					</v-form>
 				</v-card-text>
 				<v-card-actions>
-          <v-row>
-            <v-col cols="12">
-              <v-card width="500" height="500">
-                <Quagga @codigo="codigo = $event" v-if="display" />
-              </v-card>
-            </v-col>
-            <v-col cols="12">
-              <Tabla :columnas="columnas" :filas="activos" />
-            </v-col>
-          </v-row>
+					<v-row>
+						<v-col cols="12">
+							<v-card width="500" height="500">
+								<Quagga @codigo="codigo = $event" v-if="display" />
+							</v-card>
+						</v-col>
+						<v-col cols="12">
+							<Tabla :columnas="columnas" :filas="items" />
+						</v-col>
+					</v-row>
 				</v-card-actions>
 			</v-card>
 		</validation-observer>
@@ -123,14 +123,37 @@
 			codigo: '',
 			producto: '',
 			productos: [],
+			items: [],
 			activos: [],
 			columnas: ['Producto', 'Codigo de barras'],
 		}),
 		methods: {
 			...mapActions(['comprobarToken', 'listarProductos']),
 			async agregarActivo() {
-				await this.activos.push({ producto: this.producto, codigo: this.codigo });
-				this.codigo = '';
+				let agregar = true;
+				this.items.forEach((item) => {
+					if (item.codigo === this.codigo) {
+						agregar = false;
+					}
+				});
+				if (agregar) {
+					await this.items.push({ producto: this.producto, codigo: this.codigo });
+					const seleccionados = await this.items[this.items.length - 1];
+					this.productos.forEach((producto) => {
+						if (producto.nombre === seleccionados.producto) {
+							return this.activos.push({
+								producto: producto,
+								codigo: seleccionados.codigo,
+							});
+						}
+					});
+					return (this.codigo = '');
+				}
+				await Swal.fire(
+					'Error',
+					'Codigo de barras repetido, ya esta agregado',
+					'warning'
+				);
 			},
 		},
 		async created() {
