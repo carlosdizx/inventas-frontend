@@ -142,8 +142,12 @@
 				}
 			},
 		},
-		async created() {
-			//await this.comprobarToken();
-		},
+    async created() {
+      try {
+        await this.comprobarToken();
+      } catch (e) {
+        console.log('No se pudo comprobar el token');
+      }
+    },
 	};
 </script>

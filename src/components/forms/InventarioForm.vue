@@ -11,6 +11,8 @@
 								v-model="producto"
 								label="Seleccione un producto"
 								prepend-icon="mdi-view-grid-plus-outline"
+                :items="productos"
+                item-text="nombre"
 								required
 								:error-messages="errors"
 								counter
@@ -67,6 +69,8 @@
 	} from 'vee-validate';
 	import LectorBarras from '../general/LectorBarras';
 	import Quagga from '../general/Quagga';
+	import { mapActions } from 'vuex';
+	import Swal from 'sweetalert2';
 
 	{
 		setInteractionMode('eager');
@@ -104,14 +108,35 @@
 			display: false,
 			codigo: '',
 			producto: '',
+			productos: [],
 			activos: [],
 		}),
 		methods: {
+			...mapActions(['comprobarToken', 'listarProductos']),
 			async agregarActivo() {
 				await this.activos.push({ producto: this.producto, codigo: this.codigo });
 				this.producto = '';
 				this.codigo = '';
 			},
+		},
+		async created() {
+			try {
+				await this.comprobarToken();
+			} catch (e) {
+				console.log('No se pudo comprobar el token');
+			}
+		},
+		async mounted() {
+			try {
+				const respuesta = await this.listarProductos();
+				if (typeof respuesta.data.Mensaje === 'string') {
+					return await Swal.fire('Alerta', `${respuesta.data.Mensaje}`, 'info');
+				}
+				this.productos = respuesta.data.Mensaje;
+			} catch (e) {
+				console.log('No se pudo cargar los productos');
+				console.log(e);
+			}
 		},
 	};
 </script>
