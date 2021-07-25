@@ -11,8 +11,8 @@
 								v-model="producto"
 								label="Seleccione un producto"
 								prepend-icon="mdi-view-grid-plus-outline"
-                :items="productos"
-                item-text="nombre"
+								:items="productos"
+								item-text="nombre"
 								required
 								:error-messages="errors"
 								counter
@@ -24,7 +24,7 @@
 									class="mt-5 ml-2"
 									@click="display = !display"
 									icon
-									:color="display ? 'success' : 'red'"
+									:color="display ? 'primary' : 'red'"
 								>
 									<v-icon>
 										mdi-barcode-scan
@@ -41,19 +41,32 @@
 						</v-btn>
 						<br />
 						<br />
-						<v-alert dark dense :color="display ? 'success' : 'red'">
+						<v-alert dark dense :color="display ? 'primary' : 'red'">
 							{{
 								display
 									? 'Lector activado, solo compatible en computador'
 									: 'Lector desactivado, solo compatible en computador'
 							}}
 						</v-alert>
-						<v-card class="camara mx-auto" height="500" width="500">
-							<Quagga @codigo="codigo = $event" v-if="display" />
-						</v-card>
+						<v-btn :disabled="activos.length === 0" color="success">
+							Registrar inventario
+						</v-btn>
+						<br />
+						<br />
 					</v-form>
 				</v-card-text>
-				<v-card-actions> </v-card-actions>
+				<v-card-actions>
+          <v-row>
+            <v-col cols="12">
+              <v-card width="500" height="500">
+                <Quagga @codigo="codigo = $event" v-if="display" />
+              </v-card>
+            </v-col>
+            <v-col cols="12">
+              <Tabla :columnas="columnas" :filas="activos" />
+            </v-col>
+          </v-row>
+				</v-card-actions>
 			</v-card>
 		</validation-observer>
 	</v-container>
@@ -69,6 +82,7 @@
 	} from 'vee-validate';
 	import LectorBarras from '../general/LectorBarras';
 	import Quagga from '../general/Quagga';
+	import Tabla from '../general/Tabla';
 	import { mapActions } from 'vuex';
 	import Swal from 'sweetalert2';
 
@@ -103,19 +117,19 @@
 
 	export default {
 		name: 'InventarioForm',
-		components: { ValidationProvider, ValidationObserver, LectorBarras, Quagga },
+		components: { ValidationProvider, ValidationObserver, LectorBarras, Quagga, Tabla },
 		data: () => ({
 			display: false,
 			codigo: '',
 			producto: '',
 			productos: [],
 			activos: [],
+			columnas: ['Producto', 'Codigo de barras'],
 		}),
 		methods: {
 			...mapActions(['comprobarToken', 'listarProductos']),
 			async agregarActivo() {
 				await this.activos.push({ producto: this.producto, codigo: this.codigo });
-				this.producto = '';
 				this.codigo = '';
 			},
 		},
@@ -140,10 +154,3 @@
 		},
 	};
 </script>
-
-<style scoped>
-	.camara {
-		width: 400px;
-		height: 400px;
-	}
-</style>
