@@ -6,7 +6,7 @@
 			<h1 id="resultado" />
 		</v-card-title>
 		<v-card-text>
-			<div id="camara"></div>
+			<div id="camara" ></div>
 		</v-card-text>
 	</v-card>
 </template>

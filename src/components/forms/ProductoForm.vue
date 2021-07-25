@@ -143,7 +143,7 @@
 			},
 		},
 		async created() {
-			await this.comprobarToken();
+			//await this.comprobarToken();
 		},
 	};
 </script>

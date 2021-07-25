@@ -1,11 +1,8 @@
 <template>
-	<v-card class="mx-auto" height="500" width="500">
 		<v-quagga
-			height="500"
 			:onDetected="logIt"
 			:readerTypes="['ean_reader', 'code_128_reader']"
 		/>
-	</v-card>
 </template>
 
 <script>
@@ -26,12 +23,8 @@
 				console.log('detected', data);
 			},
 		},
+		mounted() {
+			console.log('componente cargado');
+		},
 	};
 </script>
-
-<style scoped>
-	.v-quagga {
-		height: 50%;
-		width: 20%;
-	}
-</style>

@@ -29,13 +29,15 @@
 								</v-btn>
 							</v-col>
 							<v-col class="ml-5" cols="10">
-								<v-text-field
-									v-model="codigo"
-									label="Codigo de barras"
-								/>
+								<v-text-field v-model="codigo" label="Codigo de barras" />
 							</v-col>
 						</v-row>
-						<Quagga v-on:dar-codigo="codigo" v-if="display" />
+						<v-alert :color="display ? 'success' : 'red'">
+							{{ display ? 'Lector activado' : 'Lector desactivado' }}
+						</v-alert>
+						<v-card class="camara mx-auto" height="500" width="500">
+							<Quagga v-if="display" />
+						</v-card>
 					</v-form>
 				</v-card-text>
 				<v-card-actions> </v-card-actions>
@@ -95,4 +97,9 @@
 	};
 </script>
 
-<style scoped></style>
+<style scoped>
+	.camara {
+		width: 400px;
+		height: 400px;
+	}
+</style>
