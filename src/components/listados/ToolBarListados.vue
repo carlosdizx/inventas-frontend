@@ -27,20 +27,30 @@
 				</v-tab>
 			</v-tabs>
 			<v-btn disabled text>
-				{{ indice === 1 ? 'Clientes' : 'Productos/Servicios' }}
+				{{ indice === 1 ? 'Clientes' : indice === 2 ? 'Productos/Servicios' : 'Inventario' }}
 			</v-btn>
 		</v-card>
 		<div v-if="indice === 1">
-			<v-btn block dark color="red" v-if="!showClientes" role="alert"
-				>No hay clientes</v-btn
-			>
+			<v-btn block dark color="red" v-if="!showClientes" role="alert">
+				No hay clientes
+			</v-btn>
 			<Tabla v-if="showClientes" :columnas="columnas_clientes" :filas="clientes" />
 		</div>
 		<div v-if="indice === 2">
-			<v-btn block dark color="red" v-if="!showProductos" role="alert"
-				>No hay productos o no tienes acceso</v-btn
-			>
+			<v-btn block dark color="red" v-if="!showProductos" role="alert">
+				No hay productos o no tienes acceso
+			</v-btn>
 			<Tabla v-if="showProductos" :columnas="columnas_productos" :filas="productos" />
+		</div>
+		<div v-if="indice === 3">
+			<v-btn block dark color="red" v-if="!showInventarios" role="alert">
+				No hay productos o no tienes a inventarios
+			</v-btn>
+			<Tabla
+				v-if="showInventarios"
+				:columnas="columnas_inventarios"
+				:filas="inventarios"
+			/>
 		</div>
 	</div>
 </template>
@@ -56,18 +66,26 @@
 			Tabla,
 		},
 		data: () => ({
-			tabs: ['mdi-account-outline', 'mdi-archive'],
+			tabs: ['mdi-account-outline', 'mdi-archive', 'mdi-warehouse'],
 			columnas_clientes: [],
 			columnas_productos: [],
+			columnas_inventarios: [],
 			clientes: [],
 			productos: [],
+			inventarios: [],
 			showClientes: false,
 			showProductos: false,
+			showInventarios: false,
 			indice: 1,
 			icono: 'clipboard-list-outline',
 		}),
 		methods: {
-			...mapActions(['listarClientes', 'listarProductos', 'comprobarToken']),
+			...mapActions([
+				'listarClientes',
+				'listarProductos',
+				'listarInventarios',
+				'comprobarToken',
+			]),
 			async cargarDatosClientes() {
 				const respuesta = await this.listarClientes();
 				if (typeof respuesta.data.Mensaje === 'string') {
@@ -92,6 +110,21 @@
 					this.columnas_productos = Object.keys(this.productos[0]);
 				}
 			},
+			async cargarDatosInventario() {
+				const respuesta = await this.listarInventarios();
+				if (typeof respuesta.data.Mensaje === 'string') {
+					this.showInventarios = false;
+					return;
+				}
+				this.showInventarios = true;
+				this.inventarios = respuesta.data.Mensaje;
+				this.inventarios.forEach((inventario) => {
+					inventario.activos = inventario.activos.length;
+				});
+				if (this.inventarios.length > 0) {
+					this.columnas_inventarios = Object.keys(this.inventarios[0]);
+				}
+			},
 			cambiarIndex(index) {
 				this.indice = index;
 			},
@@ -101,8 +134,10 @@
 				await this.comprobarToken();
 				await this.cargarDatosClientes();
 				await this.cargarDatosProductos();
+				await this.cargarDatosInventario();
 			} catch (e) {
 				console.log('El usuario no tiene acceso alguno de los recursos');
+				console.log(e);
 			}
 		},
 	};
