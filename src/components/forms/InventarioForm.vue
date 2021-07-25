@@ -36,7 +36,7 @@
 							{{ display ? 'Lector activado' : 'Lector desactivado' }}
 						</v-alert>
 						<v-card class="camara mx-auto" height="500" width="500">
-							<Quagga v-if="display" />
+							<Quagga @codigo="codigo = $event" v-if="display" />
 						</v-card>
 					</v-form>
 				</v-card-text>
@@ -92,7 +92,6 @@
 		data: () => ({
 			display: false,
 			codigo: '',
-
 		}),
 		methods: {},
 	};

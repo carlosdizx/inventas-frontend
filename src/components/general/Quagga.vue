@@ -32,6 +32,7 @@
 		}),
 		methods: {
 			logIt(data) {
+				this.$emit('codigo', data.codeResult.code);
 				setTimeout(async function() {
 					await Swal.fire({
 						title: 'Codigo escaneado',
@@ -42,7 +43,7 @@
 			},
 		},
 		mounted() {
-			console.log('componente cargado');
+			console.log('Lector de barras cargado');
 		},
 	};
 </script>
