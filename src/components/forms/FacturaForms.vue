@@ -242,6 +242,41 @@
 				});
 				return existe;
 			},
+			async agregarActivo() {
+				let agregar = true;
+				await this.activos.forEach((activo) => {
+					if (activo.codigo === parseInt(this.codigoProducto)) {
+						this.agregados.push({ codigo: activo.codigo });
+						return this.comprados.forEach((comprado) => {
+							if (comprado.producto === activo.producto.nombre) {
+								return (agregar = false);
+							}
+						});
+					}
+				});
+				await this.activos.forEach(activo=>{
+          console.log("a")
+          if (agregar) {
+            return this.comprados.push({
+              producto: activo.producto.nombre,
+              precio: activo.producto.precioVenta,
+              cantidad: 1,
+              subTotal: activo.producto.precioVenta,
+            });
+          } else {
+            return this.comprados.forEach((comprado) => {
+              if (comprado.producto === activo.producto.nombre) {
+                comprado.cantidad += 1;
+                comprado.subTotal = comprado.precio * comprado.cantidad;
+              }
+            });
+          }
+        })
+				this.total = 0;
+				this.comprados.forEach((comprado) => {
+					this.total += comprado.precio * comprado.cantidad;
+				});
+			},
 			async agregarAlCarrito() {
 				if (this.codigoProducto === null || this.codigoProducto === '') {
 					return Swal.fire(
@@ -251,6 +286,7 @@
 					);
 				}
 				let continuar = true;
+				//Validaciones
 				if (!(await this.codigoRepetido())) {
 					if (!(await this.existeCodigo())) {
 						await Swal.fire({
@@ -282,52 +318,8 @@
 					}
 				}
 				if (continuar) {
-					await this.activos.forEach((activo) => {
-						if (activo.codigo === parseInt(this.codigoProducto)) {
-							this.agregados.push({ codigo: activo.codigo });
-							this.comprados.push({
-								producto: activo.producto.nombre,
-								precio: activo.producto.precioVenta,
-								cantidad: 1,
-								subTotal: 0,
-							});
-						}
-					});
-					this.total = 0;
-					this.comprados.forEach((comprado) => {
-						this.total += comprado.precio * comprado.cantidad;
-					});
+					await this.agregarActivo();
 				}
-				/**
-				await this.productos.forEach((producto) => {
-					if (producto.nombre === this.productoSeleccionado) {
-						let registrado = false;
-						this.comprados.forEach((comprado, index) => {
-							if (comprado.producto === this.productoSeleccionado) {
-								comprado.cantidad += this.cantidad;
-								comprado.subTotal += comprado.precio * this.cantidad;
-								return (registrado = true);
-							}
-						});
-						if (!registrado) {
-							const subTotal = producto.precioVenta * this.cantidad;
-							return this.comprados.push({
-								producto: producto.nombre,
-								precio: producto.precioVenta,
-								cantidad: this.cantidad,
-								subTotal: subTotal,
-							});
-						}
-					}
-				});
-				this.total = 0;
-				this.comprados.forEach((comprado) => {
-					this.total += comprado.precio * comprado.cantidad;
-				});
-
-				this.cantidad = 1;
-				this.productoSeleccionado = null;
-				*/
 			},
 		},
 		async mounted() {
