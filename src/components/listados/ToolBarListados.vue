@@ -127,7 +127,9 @@
 							cantidad++;
 						}
 					});
+					inventario.total = inventario.activos.length;
 					inventario.activos = cantidad;
+					inventario.vendidos = inventario.total-cantidad;
 				});
 				this.columnas_inventarios = Object.keys(this.inventarios[0]);
 			},
