@@ -63,3 +63,12 @@ export const AGREGAR_INVENTARIO = async (token: any, inventario: any) =>
 			'Content-Type': 'application/json',
 		},
 	});
+
+// -------------------- ACTIVOS -----------------
+export const LISTAR_ACTIVOS = async (token: any) =>
+	await INSTANCIA.get('/api/activos/all', {
+		headers: {
+			Authorization: 'Bearer ' + token,
+		},
+	});
+

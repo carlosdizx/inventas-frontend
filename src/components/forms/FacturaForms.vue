@@ -49,10 +49,7 @@
 								/>
 							</v-col>
 							<v-col cols="9">
-								<v-text-field
-									v-model="productoSeleccionado"
-									label="Producto"
-								/>
+								<v-text-field v-model="productoSeleccionado" label="Producto" />
 							</v-col>
 						</v-row>
 						<v-btn @click="agregarAlCarrito">
@@ -161,7 +158,7 @@
 			...mapActions([
 				'listarProductos',
 				'listarClientes',
-				'listarInfoFacturas',
+				'listarActivos',
 				'agregarFactura',
 				'comprobarToken',
 			]),
@@ -205,6 +202,14 @@
 				this.mostrar = true;
 				this.productos = respuesta.data.Mensaje;
 			},
+			async cargarActivosDeInventarios() {
+				const respuesta = await this.listarActivos();
+				if (typeof respuesta.data.Mensaje === 'string') {
+					return (this.mostrar = false);
+				}
+				this.mostrar = true;
+				console.log(JSON.parse(JSON.stringify(respuesta.data.Mensaje)));
+			},
 			async agregarAlCarrito() {
 				if (this.productoSeleccionado === null || this.cantidad <= 0) {
 					return Swal.fire(
@@ -247,6 +252,7 @@
 			try {
 				await this.comprobarToken();
 				await this.cargarDatosProductos();
+				await this.cargarActivosDeInventarios();
 			} catch (e) {}
 		},
 	};
