@@ -49,7 +49,12 @@
 								/>
 							</v-col>
 							<v-col cols="9">
-								<v-text-field v-model="productoSeleccionado" label="Producto" />
+								<v-text-field
+									v-model="codigoProducto"
+									type="number"
+									label="Codigo del producto"
+									prepend-icon="mdi-barcode-scan"
+								/>
 							</v-col>
 						</v-row>
 						<v-btn @click="agregarAlCarrito">
@@ -146,10 +151,12 @@
 			documento: null,
 			productos: [],
 			cantidad: 1,
-			productoSeleccionado: null,
+			codigoProducto: null,
 			mostrar: false,
 			comprados: [],
+			agregados: [],
 			items: [],
+			activos: [],
 			total: 0,
 			dinero: 0,
 			columnas: ['Producto', 'Precio', 'Cantidad', 'Subtotal'],
@@ -179,7 +186,7 @@
 					return Swal.fire('Advertencia', `${respuesta.data.Mensaje}`, 'warning');
 				}
 				this.cantidad = 1;
-				this.productoSeleccionado = null;
+				this.codigoProducto = null;
 				this.items = [];
 				this.comprados = [];
 				this.total = 0;
@@ -208,16 +215,90 @@
 					return (this.mostrar = false);
 				}
 				this.mostrar = true;
-				console.log(JSON.parse(JSON.stringify(respuesta.data.Mensaje)));
+				this.activos = JSON.parse(JSON.stringify(respuesta.data.Mensaje));
 			},
-			async agregarAlCarrito() {
-				if (this.productoSeleccionado === null || this.cantidad <= 0) {
-					return Swal.fire(
-						'Producto',
-						'Seleccione un producto y verifique la cantidad',
+			async codigoRepetido() {
+				let preRegistrado = false;
+				this.agregados.forEach((agregado) => {
+					if (agregado.codigo === parseInt(this.codigoProducto)) {
+						return (preRegistrado = true);
+					}
+				});
+				if (preRegistrado) {
+					await Swal.fire(
+						'Repetido',
+						'Codigo del producto ya se encuentra registrado en la factura',
 						'warning'
 					);
 				}
+				return preRegistrado;
+			},
+			async existeCodigo() {
+				let existe = false;
+				this.activos.forEach((activo) => {
+					if (activo.codigo === parseInt(this.codigoProducto)) {
+						existe = true;
+					}
+				});
+				return existe;
+			},
+			async agregarAlCarrito() {
+				if (this.codigoProducto === null || this.codigoProducto === '') {
+					return Swal.fire(
+						'Codigo de barras',
+						'Escane o escirba el codigo de barras de un producto registrado en el inventario',
+						'warning'
+					);
+				}
+				let continuar = true;
+				if (!(await this.codigoRepetido())) {
+					if (!(await this.existeCodigo())) {
+						await Swal.fire({
+							title: 'No registrado',
+							html: `El codigo de barras no se encuentra registrado.
+              <br> Codigo ingresado: ${this.codigoProducto} <br>
+              ¿Desea agregarlo de todas formas?`,
+							showDenyButton: true,
+							confirmButtonText: `Si, Continuar`,
+							denyButtonText: `No, no agregarlo`,
+						}).then((result) => {
+							if (result.isDenied) {
+								Swal.fire({
+									title: 'No Agregado',
+									showConfirmButton: false,
+									timer: 700,
+									icon: 'warning',
+								});
+								continuar = false;
+							} else {
+								Swal.fire({
+									title: 'Agregado',
+									showConfirmButton: false,
+									timer: 700,
+									icon: 'info',
+								});
+							}
+						});
+					}
+				}
+				if (continuar) {
+					await this.activos.forEach((activo) => {
+						if (activo.codigo === parseInt(this.codigoProducto)) {
+							this.agregados.push({ codigo: activo.codigo });
+							this.comprados.push({
+								producto: activo.producto.nombre,
+								precio: activo.producto.precioVenta,
+								cantidad: 1,
+								subTotal: 0,
+							});
+						}
+					});
+					this.total = 0;
+					this.comprados.forEach((comprado) => {
+						this.total += comprado.precio * comprado.cantidad;
+					});
+				}
+				/**
 				await this.productos.forEach((producto) => {
 					if (producto.nombre === this.productoSeleccionado) {
 						let registrado = false;
@@ -246,6 +327,7 @@
 
 				this.cantidad = 1;
 				this.productoSeleccionado = null;
+				*/
 			},
 		},
 		async mounted() {
