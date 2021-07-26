@@ -121,7 +121,13 @@
 				this.showInventarios = true;
 				this.inventarios = respuesta.data.Mensaje;
 				this.inventarios.forEach((inventario) => {
-					inventario.activos = inventario.activos.length;
+					let cantidad = 0;
+					inventario.activos.forEach((activo) => {
+						if (activo.estado) {
+							cantidad++;
+						}
+					});
+					inventario.activos = cantidad;
 				});
 				this.columnas_inventarios = Object.keys(this.inventarios[0]);
 			},
