@@ -15,8 +15,8 @@
 		<validation-observer ref="observer" v-slot="{ invalid }">
 			<v-container v-if="!mostrar" color="red">
 				No se puede registrar ventas<br />
-				1. Agregue uno o mas productos <br />
-				2. agregue almenos un cliete
+				1. Agregue uno o mas productos/servicios <br />
+				2. Agregue esos prodcutos/servicios al inventario
 			</v-container>
 			<v-card v-if="mostrar">
 				<v-card-title>Complete los campos</v-card-title>
@@ -49,11 +49,9 @@
 								/>
 							</v-col>
 							<v-col cols="9">
-								<v-select
+								<v-text-field
 									v-model="productoSeleccionado"
 									label="Producto"
-									:items="productos"
-									item-text="nombre"
 								/>
 							</v-col>
 						</v-row>
