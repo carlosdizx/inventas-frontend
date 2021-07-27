@@ -217,6 +217,15 @@
 				this.mostrar = true;
 				this.activos = JSON.parse(JSON.stringify(respuesta.data.Mensaje));
 			},
+			async composCorrectos() {
+				return this.codigoProducto === null || this.codigoProducto === ''
+					? Swal.fire(
+							'Codigo de barras',
+							'Escane o escirba el codigo de barras de un producto registrado en el inventario',
+							'warning'
+					  )
+					: true;
+			},
 			async codigoRepetido() {
 				let preRegistrado = false;
 				this.agregados.forEach((agregado) => {
@@ -231,94 +240,70 @@
 						'warning'
 					);
 				}
-				return preRegistrado;
+				return !preRegistrado;
 			},
-			async existeCodigo() {
+			existeCodigo() {
 				let existe = false;
 				this.activos.forEach((activo) => {
 					if (activo.codigo === parseInt(this.codigoProducto)) {
 						existe = true;
 					}
 				});
-				return existe;
-			},
-			async agregarActivo() {
-				let agregar = true;
-				await this.activos.forEach((activo) => {
-					if (activo.codigo === parseInt(this.codigoProducto)) {
-						this.agregados.push({ codigo: activo.codigo });
-						return this.comprados.forEach((comprado) => {
-							if (comprado.producto === activo.producto.nombre) {
-								return (agregar = false);
-							}
-						});
-					}
-				});
-				await this.activos.forEach(activo=>{
-          console.log("a")
-          if (agregar) {
-            return this.comprados.push({
-              producto: activo.producto.nombre,
-              precio: activo.producto.precioVenta,
-              cantidad: 1,
-              subTotal: activo.producto.precioVenta,
-            });
-          } else {
-            return this.comprados.forEach((comprado) => {
-              if (comprado.producto === activo.producto.nombre) {
-                comprado.cantidad += 1;
-                comprado.subTotal = comprado.precio * comprado.cantidad;
-              }
-            });
-          }
-        })
-				this.total = 0;
-				this.comprados.forEach((comprado) => {
-					this.total += comprado.precio * comprado.cantidad;
-				});
-			},
-			async agregarAlCarrito() {
-				if (this.codigoProducto === null || this.codigoProducto === '') {
-					return Swal.fire(
-						'Codigo de barras',
-						'Escane o escirba el codigo de barras de un producto registrado en el inventario',
-						'warning'
+				if (!existe) {
+					Swal.fire(
+						'No agregado',
+						`Codigo no esta registrado en el inventario<br>
+	                   Codigo ingresado: ${this.codigoProducto}`,
+						'error'
 					);
 				}
-				let continuar = true;
-				//Validaciones
-				if (!(await this.codigoRepetido())) {
-					if (!(await this.existeCodigo())) {
-						await Swal.fire({
-							title: 'No registrado',
-							html: `El codigo de barras no se encuentra registrado.
-              <br> Codigo ingresado: ${this.codigoProducto} <br>
-              ¿Desea agregarlo de todas formas?`,
-							showDenyButton: true,
-							confirmButtonText: `Si, Continuar`,
-							denyButtonText: `No, no agregarlo`,
-						}).then((result) => {
-							if (result.isDenied) {
-								Swal.fire({
-									title: 'No Agregado',
-									showConfirmButton: false,
-									timer: 700,
-									icon: 'warning',
+				return existe;
+			},
+			async agregarAlCarrito() {
+				if (await this.composCorrectos()) {
+					if (await this.codigoRepetido()) {
+						if (this.existeCodigo()) {
+							let existe = false;
+							await this.activos.forEach((activo) => {
+								if (activo.codigo === parseInt(this.codigoProducto)) {
+									this.agregados.push({
+										codigo: activo.codigo,
+										producto: activo.producto,
+									});
+								}
+							});
+							const producto = this.agregados[this.agregados.length - 1].producto;
+							this.comprados.forEach((comprado) => {
+								if (comprado.producto === producto.nombre) {
+									return (existe = true);
+								}
+							});
+							if (existe) {
+								this.comprados.forEach((comprado) => {
+									if (comprado.producto === producto.nombre) {
+										comprado.cantidad += 1;
+										comprado.subTotal = comprado.cantidad * comprado.precio;
+									}
 								});
-								continuar = false;
 							} else {
-								Swal.fire({
-									title: 'Agregado',
-									showConfirmButton: false,
-									timer: 700,
-									icon: 'info',
+								this.comprados.push({
+									producto: producto.nombre,
+									precio: producto.precioVenta,
+									cantidad: 1,
+									subTotal: producto.precioVenta,
 								});
 							}
-						});
+							await Swal.fire({
+								title: 'Agreado',
+								icon: 'success',
+								timer: 780,
+							});
+							this.total = 0;
+							this.comprados.forEach((comprado) => {
+								this.total += comprado.subTotal;
+							});
+						}
 					}
-				}
-				if (continuar) {
-					await this.agregarActivo();
 				}
 			},
 		},
