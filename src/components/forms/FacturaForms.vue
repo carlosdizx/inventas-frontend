@@ -39,24 +39,12 @@
 						<v-spacer />
 						<v-divider />
 						<v-spacer />
-						<v-row>
-							<v-col cols="3">
-								<v-text-field
-									v-model.number="cantidad"
-									label="Cantidad"
-									type="number"
-									counter
-								/>
-							</v-col>
-							<v-col cols="9">
-								<v-text-field
-									v-model="codigoProducto"
-									type="number"
-									label="Codigo del producto"
-									prepend-icon="mdi-barcode-scan"
-								/>
-							</v-col>
-						</v-row>
+						<v-text-field
+							v-model="codigoProducto"
+							type="number"
+							label="Codigo del producto"
+							prepend-icon="mdi-barcode-scan"
+						/>
 						<v-btn @click="agregarAlCarrito">
 							agregar producto
 							<v-icon>mdi-cart-plus</v-icon>
@@ -150,7 +138,6 @@
 		data: () => ({
 			documento: null,
 			productos: [],
-			cantidad: 1,
 			codigoProducto: null,
 			mostrar: false,
 			comprados: [],
@@ -185,7 +172,6 @@
 				if (typeof respuesta.data.Mensaje === 'string') {
 					return Swal.fire('Advertencia', `${respuesta.data.Mensaje}`, 'warning');
 				}
-				this.cantidad = 1;
 				this.codigoProducto = null;
 				this.items = [];
 				this.comprados = [];
