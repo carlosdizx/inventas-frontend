@@ -28,7 +28,13 @@
 			</v-tabs>
 			<v-btn disabled text>
 				{{
-					indice === 1 ? 'Clientes' : indice === 2 ? 'Productos/Servicios' : 'Inventario'
+					indice === 1
+						? 'Clientes'
+						: indice === 2
+						? 'Productos/Servicios'
+						: indice === 3
+						? 'Inventario'
+						: 'Activos/Inventario detallado'
 				}}
 			</v-btn>
 		</v-card>
@@ -46,13 +52,19 @@
 		</div>
 		<div v-if="indice === 3">
 			<v-btn block dark color="red" v-if="!showInventarios" role="alert">
-				No hay productos o no tienes a inventarios
+				No hay inventarios o no tienes acceso
 			</v-btn>
 			<Tabla
 				v-if="showInventarios"
 				:columnas="columnas_inventarios"
 				:filas="inventarios"
 			/>
+		</div>
+		<div v-if="indice === 4">
+			<v-btn block dark color="red" v-if="!showActivos" role="alert">
+				No hay activos o no tienes acceso
+			</v-btn>
+			<Tabla v-if="showActivos" :columnas="columnas_activos" :filas="activos" />
 		</div>
 	</div>
 </template>
@@ -68,16 +80,19 @@
 			Tabla,
 		},
 		data: () => ({
-			tabs: ['mdi-account-outline', 'mdi-archive', 'mdi-warehouse'],
+			tabs: ['mdi-account-outline', 'mdi-archive', 'mdi-warehouse', 'mdi-checkbox-marked-outline'],
 			columnas_clientes: [],
 			columnas_productos: [],
 			columnas_inventarios: [],
+			columnas_activos: [],
 			clientes: [],
 			productos: [],
 			inventarios: [],
+			activos: [],
 			showClientes: false,
 			showProductos: false,
 			showInventarios: false,
+			showActivos: false,
 			indice: 1,
 			icono: 'clipboard-list-outline',
 		}),
@@ -129,9 +144,29 @@
 					});
 					inventario.total = inventario.activos.length;
 					inventario.activos = cantidad;
-					inventario.vendidos = inventario.total-cantidad;
+					inventario.vendidos = inventario.total - cantidad;
 				});
 				this.columnas_inventarios = Object.keys(this.inventarios[0]);
+			},
+			async cargarDatosActivos() {
+				const respuesta = await this.listarInventarios();
+				if (typeof respuesta.data.Mensaje === 'string') {
+					return (this.showInventarios = false);
+				}
+				this.showActivos = true;
+				const inventariosTemp = respuesta.data.Mensaje;
+				inventariosTemp.forEach((i) => {
+					const activosTemp = i.activos;
+					activosTemp.forEach((a) => {
+						this.activos.push({
+							no_inventario: i.id,
+							codigo: a.codigo,
+							estado: a.estado ? 'Disponible' : 'Vendido',
+							producto: a.producto.nombre,
+						});
+					});
+				});
+				this.columnas_activos = Object.keys(this.activos[0]);
 			},
 			cambiarIndex(index) {
 				this.indice = index;
@@ -143,6 +178,7 @@
 				await this.cargarDatosClientes();
 				await this.cargarDatosProductos();
 				await this.cargarDatosInventario();
+				await this.cargarDatosActivos();
 			} catch (e) {
 				console.log('El usuario no tiene acceso alguno de los recursos');
 				console.log(e);

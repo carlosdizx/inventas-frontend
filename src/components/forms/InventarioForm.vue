@@ -104,12 +104,7 @@
 			columnas: ['Producto', 'Codigo de barras'],
 		}),
 		methods: {
-			...mapActions([
-				'comprobarToken',
-				'listarProductos',
-				'agregarInventarios',
-				'listarInventarios',
-			]),
+			...mapActions(['comprobarToken', 'listarProductos', 'agregarInventarios']),
 			async agregarActivo() {
 				let agregar = true;
 				this.items.forEach((item) => {
@@ -163,7 +158,6 @@
 		async created() {
 			try {
 				await this.comprobarToken();
-				await this.listarInventarios();
 			} catch (e) {
 				console.log('No se pudo comprobar el token');
 				console.log(e);
