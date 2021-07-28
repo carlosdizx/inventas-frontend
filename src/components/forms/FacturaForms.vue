@@ -15,8 +15,8 @@
 		<validation-observer ref="observer" v-slot="{ invalid }">
 			<v-container v-if="!mostrar" color="red">
 				No se puede registrar ventas<br />
-				1. Agregue uno o mas productos <br />
-				2. agregue almenos un cliete
+				1. Agregue uno o mas productos/servicios <br />
+				2. Agregue esos prodcutos/servicios al inventario
 			</v-container>
 			<v-card v-if="mostrar">
 				<v-card-title>Complete los campos</v-card-title>
@@ -39,24 +39,12 @@
 						<v-spacer />
 						<v-divider />
 						<v-spacer />
-						<v-row>
-							<v-col cols="3">
-								<v-text-field
-									v-model.number="cantidad"
-									label="Cantidad"
-									type="number"
-									counter
-								/>
-							</v-col>
-							<v-col cols="9">
-								<v-select
-									v-model="productoSeleccionado"
-									label="Producto"
-									:items="productos"
-									item-text="nombre"
-								/>
-							</v-col>
-						</v-row>
+						<v-text-field
+							v-model="codigoProducto"
+							type="number"
+							label="Codigo del producto"
+							prepend-icon="mdi-barcode-scan"
+						/>
 						<v-btn @click="agregarAlCarrito">
 							agregar producto
 							<v-icon>mdi-cart-plus</v-icon>
@@ -150,11 +138,12 @@
 		data: () => ({
 			documento: null,
 			productos: [],
-			cantidad: 1,
-			productoSeleccionado: null,
+			codigoProducto: null,
 			mostrar: false,
 			comprados: [],
+			agregados: [],
 			items: [],
+			activos: [],
 			total: 0,
 			dinero: 0,
 			columnas: ['Producto', 'Precio', 'Cantidad', 'Subtotal'],
@@ -163,8 +152,9 @@
 			...mapActions([
 				'listarProductos',
 				'listarClientes',
-				'listarInfoFacturas',
+				'listarActivos',
 				'agregarFactura',
+				'actualizarActivos',
 				'comprobarToken',
 			]),
 			async registrarFactura() {
@@ -183,8 +173,9 @@
 				if (typeof respuesta.data.Mensaje === 'string') {
 					return Swal.fire('Advertencia', `${respuesta.data.Mensaje}`, 'warning');
 				}
-				this.cantidad = 1;
-				this.productoSeleccionado = null;
+				const resultado = await this.actualizarActivos(this.agregados);
+				console.log(resultado);
+				this.codigoProducto = null;
 				this.items = [];
 				this.comprados = [];
 				this.total = 0;
@@ -207,48 +198,106 @@
 				this.mostrar = true;
 				this.productos = respuesta.data.Mensaje;
 			},
-			async agregarAlCarrito() {
-				if (this.productoSeleccionado === null || this.cantidad <= 0) {
-					return Swal.fire(
-						'Producto',
-						'Seleccione un producto y verifique la cantidad',
+			async cargarActivosDeInventarios() {
+				const respuesta = await this.listarActivos();
+				if (typeof respuesta.data.Mensaje === 'string') {
+					return (this.mostrar = false);
+				}
+				this.mostrar = true;
+				this.activos = JSON.parse(JSON.stringify(respuesta.data.Mensaje));
+			},
+			async composCorrectos() {
+				return this.codigoProducto === null || this.codigoProducto === ''
+					? Swal.fire(
+							'Codigo de barras',
+							'Escane o escirba el codigo de barras de un producto registrado en el inventario',
+							'warning'
+					  )
+					: true;
+			},
+			async codigoRepetido() {
+				let preRegistrado = false;
+				this.agregados.forEach((agregado) => {
+					if (agregado.codigo === parseInt(this.codigoProducto)) {
+						return (preRegistrado = true);
+					}
+				});
+				if (preRegistrado) {
+					await Swal.fire(
+						'Repetido',
+						'Codigo del producto ya se encuentra registrado en la factura',
 						'warning'
 					);
 				}
-				await this.productos.forEach((producto) => {
-					if (producto.nombre === this.productoSeleccionado) {
-						let registrado = false;
-						this.comprados.forEach((comprado, index) => {
-							if (comprado.producto === this.productoSeleccionado) {
-								comprado.cantidad += this.cantidad;
-								comprado.subTotal += comprado.precio * this.cantidad;
-								return (registrado = true);
+				return !preRegistrado;
+			},
+			existeCodigo() {
+				let existe = false;
+				this.activos.forEach((activo) => {
+					if (activo.codigo === parseInt(this.codigoProducto)) {
+						existe = true;
+					}
+				});
+				if (!existe) {
+					Swal.fire(
+						'No agregado',
+						`Codigo no esta registrado en el inventario<br>
+	                   Codigo ingresado: ${this.codigoProducto}`,
+						'error'
+					);
+				}
+				return existe;
+			},
+			async agregarAlCarrito() {
+				if (await this.composCorrectos()) {
+					if (await this.codigoRepetido()) {
+						if (this.existeCodigo()) {
+							let existe = false;
+							await this.activos.forEach((activo) => {
+								if (activo.codigo === parseInt(this.codigoProducto)) {
+									this.agregados.push(activo);
+								}
+							});
+							const producto = this.agregados[this.agregados.length - 1].producto;
+							this.comprados.forEach((comprado) => {
+								if (comprado.producto === producto.nombre) {
+									return (existe = true);
+								}
+							});
+							if (existe) {
+								this.comprados.forEach((comprado) => {
+									if (comprado.producto === producto.nombre) {
+										comprado.cantidad += 1;
+										comprado.subTotal = comprado.cantidad * comprado.precio;
+									}
+								});
+							} else {
+								this.comprados.push({
+									producto: producto.nombre,
+									precio: producto.precioVenta,
+									cantidad: 1,
+									subTotal: producto.precioVenta,
+								});
 							}
-						});
-						if (!registrado) {
-							const subTotal = producto.precioVenta * this.cantidad;
-							return this.comprados.push({
-								producto: producto.nombre,
-								precio: producto.precioVenta,
-								cantidad: this.cantidad,
-								subTotal: subTotal,
+							await Swal.fire({
+								title: 'Agreado',
+								icon: 'success',
+								timer: 780,
+							});
+							this.total = 0;
+							this.comprados.forEach((comprado) => {
+								this.total += comprado.subTotal;
 							});
 						}
 					}
-				});
-				this.total = 0;
-				this.comprados.forEach((comprado) => {
-					this.total += comprado.precio * comprado.cantidad;
-				});
-
-				this.cantidad = 1;
-				this.productoSeleccionado = null;
+				}
 			},
 		},
 		async mounted() {
 			try {
 				await this.comprobarToken();
 				await this.cargarDatosProductos();
+				await this.cargarActivosDeInventarios();
 			} catch (e) {}
 		},
 	};
