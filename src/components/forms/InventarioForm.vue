@@ -18,36 +18,18 @@
 								counter
 							/>
 						</validation-provider>
-						<v-row>
-							<v-col cols="1">
-								<v-btn
-									class="mt-5 ml-2"
-									@click="display = !display"
-									icon
-									:color="display ? 'primary' : 'red'"
-								>
-									<v-icon>
-										mdi-barcode-scan
-									</v-icon>
-								</v-btn>
-							</v-col>
-							<v-col class="ml-5" cols="10">
-								<v-text-field v-model="codigo" label="Codigo de barras" />
-							</v-col>
-						</v-row>
+						<v-text-field
+							v-model="codigo"
+							label="Codigo de barras"
+							color="success"
+							prepend-icon="mdi-barcode-scan"
+						/>
 						<v-btn :disabled="codigo === '' || producto === ''" @click="agregarActivo">
 							<v-icon>mdi-shape-plus</v-icon>
 							Agregar codigo
 						</v-btn>
 						<br />
 						<br />
-						<v-alert dark dense :color="display ? 'primary' : 'red'">
-							{{
-								display
-									? 'Lector activado, solo compatible en computador'
-									: 'Lector desactivado, solo compatible en computador'
-							}}
-						</v-alert>
 						<v-btn
 							@click="registrarInvetario"
 							:disabled="activos.length === 0"
@@ -60,16 +42,7 @@
 					</v-form>
 				</v-card-text>
 				<v-card-actions>
-					<v-row>
-						<v-col cols="12">
-							<v-card width="500" height="500">
-								<Quagga @codigo="codigo = $event" v-if="display" />
-							</v-card>
-						</v-col>
-						<v-col cols="12">
-							<Tabla :columnas="columnas" :filas="items" />
-						</v-col>
-					</v-row>
+					<Tabla :columnas="columnas" :filas="items" />
 				</v-card-actions>
 			</v-card>
 		</validation-observer>
@@ -84,7 +57,6 @@
 		ValidationProvider,
 		setInteractionMode,
 	} from 'vee-validate';
-	import LectorBarras from '../general/LectorBarras';
 	import Quagga from '../general/Quagga';
 	import Tabla from '../general/Tabla';
 	import { mapActions } from 'vuex';
@@ -121,7 +93,7 @@
 
 	export default {
 		name: 'InventarioForm',
-		components: { ValidationProvider, ValidationObserver, LectorBarras, Quagga, Tabla },
+		components: { ValidationProvider, ValidationObserver, Quagga, Tabla },
 		data: () => ({
 			display: false,
 			codigo: '',
@@ -171,7 +143,6 @@
 					if (typeof respuesta.data.Mensaje === 'string') {
 						return await Swal.fire('Alerta', `${respuesta.data.Mensaje}`, 'info');
 					}
-					console.log();
 					this.display = false;
 					this.codigo = '';
 					this.producto = '';
@@ -192,7 +163,7 @@
 		async created() {
 			try {
 				await this.comprobarToken();
-				console.log(await this.listarInventarios());
+				await this.listarInventarios();
 			} catch (e) {
 				console.log('No se pudo comprobar el token');
 				console.log(e);
