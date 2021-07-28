@@ -16,7 +16,7 @@
 			<v-container v-if="!mostrar" color="red">
 				No se puede registrar ventas<br />
 				1. Agregue uno o mas productos/servicios <br />
-				2. Agregue esos prodcutos/servicios al inventario
+				2. Agregue esos productos/servicios al inventario
 			</v-container>
 			<v-card v-if="mostrar">
 				<v-card-title>Complete los campos</v-card-title>

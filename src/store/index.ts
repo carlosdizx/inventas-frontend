@@ -7,7 +7,8 @@ import {
 	AGREGAR_CLIENTE,
 	AGREGAR_FACTURA,
 	AGREGAR_INVENTARIO,
-	AGREGAR_PRODUCTO, LISTAR_ACTIVOS,
+	AGREGAR_PRODUCTO,
+	LISTAR_ACTIVOS,
 	LISTAR_CLIENTES,
 	LISTAR_FACTURAS,
 	LISTAR_INVENTARIOS,
@@ -77,6 +78,7 @@ export default new Vuex.Store({
 					await Swal.fire('Por seguridad', 'Vuelve a iniciar sesion 👌', 'info');
 					return await router.push('/');
 				});
+				await dispatch('cargarDatos');
 				return;
 			}
 			await Swal.fire('Iniciar sesion', 'Vuelve a iniciar sesion 👌', 'info');
@@ -133,7 +135,7 @@ export default new Vuex.Store({
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
 			return LISTAR_ACTIVOS(token.access_token);
 		},
-		actualizarActivos({ commit },activos: any): any {
+		actualizarActivos({ commit }, activos: any): any {
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
 			return ACTUALIZAR_ACTIVOS(token.access_token, activos);
 		},
