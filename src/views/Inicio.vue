@@ -4,28 +4,35 @@
 		<v-container>
 			<v-card>
 				<v-card-text>
-					<v-alert dense dark color="primary">
+					<v-alert block dense dark color="orange">
 						Bienvenido!!! <br />
-						{{ usuario.info }}<br />
+						{{ usuario.info }} 👋
 					</v-alert>
 				</v-card-text>
-				<v-card-text>
-					<v-alert>Utiliza los iconos de la parte superior para navegar</v-alert>
-				</v-card-text>
+				<v-alert>Utiliza los iconos de la parte superior para navegar  mas comodamemente</v-alert>
+				<v-alert>En la seccion de abajo esta explicada para que sirve cada boton o icono</v-alert>
 				<v-card-actions>
 					<v-list>
-						<v-list-item v-for="(tab, index) in tabs" :key="index">
-							<v-list-item-icon>
-								<v-icon color="primary">{{ tab.icono }}</v-icon>
-							</v-list-item-icon>
-							<v-list-item-content>
-								<v-list-item-title>
-									<v-alert>
-										{{ tab.descripcion }}
-									</v-alert>
-								</v-list-item-title>
-							</v-list-item-content>
-						</v-list-item>
+						<v-divider />
+						<router-link
+							:to="tab.link"
+							v-for="(tab, index) in tabs"
+							v-slot="{ navigate }"
+							custom
+						>
+							<v-list-item :key="index">
+								<v-list-item-icon>
+									<v-icon @click="navigate" color="primary">{{ tab.icono }}</v-icon>
+								</v-list-item-icon>
+								<v-list-item-content>
+									<v-list-item-title @click="navigate">
+										<v-alert>
+											{{ tab.descripcion }}
+										</v-alert>
+									</v-list-item-title>
+								</v-list-item-content>
+							</v-list-item>
+						</router-link>
 					</v-list>
 				</v-card-actions>
 			</v-card>
