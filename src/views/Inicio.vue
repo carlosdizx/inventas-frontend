@@ -1,24 +1,36 @@
 <template>
-	<div>
+	<v-card>
 		<ToolBarNav :tabs="tabs" />
 		<v-container>
 			<v-card>
 				<v-card-text>
 					<v-alert dense dark color="primary">
 						Bienvenido!!! <br />
-						{{ usuario.info }}
-						{{ usuario }}
+						{{ usuario.info }}<br />
 					</v-alert>
 				</v-card-text>
 				<v-card-text>
 					<v-alert>Utiliza los iconos de la parte superior para navegar</v-alert>
 				</v-card-text>
 				<v-card-actions>
-					<h1>{{ admin }}</h1>
+					<v-list>
+						<v-list-item v-for="(tab, index) in tabs" :key="index">
+							<v-list-item-icon>
+								<v-icon color="primary">{{ tab.icono }}</v-icon>
+							</v-list-item-icon>
+							<v-list-item-content>
+								<v-list-item-title>
+									<v-alert>
+										{{ tab.descripcion }}
+									</v-alert>
+								</v-list-item-title>
+							</v-list-item-content>
+						</v-list-item>
+					</v-list>
 				</v-card-actions>
 			</v-card>
 		</v-container>
-	</div>
+	</v-card>
 </template>
 
 <script>
@@ -43,39 +55,43 @@
 		},
 		async created() {
 			this.tabs = [
-				{ link: '/inicio', icono: 'mdi-home', descripcion: 'Estas en esta seccion' },
+				{ link: '/inicio', icono: 'mdi-home', descripcion: '📍 Estas en esta seccion' },
 				{
 					link: '/cajaregistradora',
 					icono: 'mdi-cash-register',
-					descripcion: 'Para registrar una venta, genera una factura',
+					descripcion: 'Registrar una venta',
 				},
-				{ link: '/listados', icono: 'mdi-clipboard-list-outline', descripcion: '' },
+				{
+					link: '/listados',
+					icono: 'mdi-clipboard-list-outline',
+					descripcion: 'Listas de recursos',
+				},
 				{
 					link: '/registro',
 					icono: 'mdi-view-grid-plus',
-					descripcion: 'Registrar productos, clientes o inventarios',
+					descripcion: 'Registrar recursos',
 				},
 				{
 					link: '/facturas',
 					icono: 'mdi-receipt',
-					descripcion: 'Visualiza las ventas en facturas',
+					descripcion: 'Visualizar ventas en facturas',
 				},
-				{ link: '/inicio', icono: 'mdi-account-multiple', descripcion: 'Nada' },
-				{ link: '/inicio', icono: 'mdi-file-document', descripcion: 'Genera informes' },
+				{ link: '/inicio', icono: 'mdi-account-multiple', descripcion: 'Nada 🏗👷' },
+				{
+					link: '/inicio',
+					icono: 'mdi-file-document',
+					descripcion: 'Genera informes 🏗👷',
+				},
 				{
 					link: '/inicio',
 					icono: 'mdi-poll',
-					descripcion: 'Realiza graficas de resumen',
+					descripcion: 'Graficas de resumen 🏗👷',
 				},
 			];
 			await this.comprobarToken();
-			const token = JSON.parse(this.token);
-			const decodificado = JSON.parse(
-				decodeURIComponent(escape(atob(token.access_token.split('.')[1])))
-			);
-			decodificado.authorities.forEach((authority) => {
+			this.usuario.authorities.forEach((authority) => {
 				if (authority === 'ROLE_ADMIN') {
-					this.admin = true;
+					return (this.admin = true);
 				}
 			});
 		},
