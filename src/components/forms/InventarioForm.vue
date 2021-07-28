@@ -23,6 +23,7 @@
 							label="Codigo de barras"
 							color="success"
 							prepend-icon="mdi-barcode-scan"
+							v-on:keyup.13="agregarActivo()"
 						/>
 						<v-btn :disabled="codigo === '' || producto === ''" @click="agregarActivo">
 							<v-icon>mdi-shape-plus</v-icon>
@@ -106,30 +107,34 @@
 		methods: {
 			...mapActions(['comprobarToken', 'listarProductos', 'agregarInventarios']),
 			async agregarActivo() {
-				let agregar = true;
-				this.items.forEach((item) => {
-					if (item.codigo === this.codigo) {
-						agregar = false;
-					}
-				});
-				if (agregar) {
-					await this.items.push({ producto: this.producto, codigo: this.codigo });
-					const seleccionados = await this.items[this.items.length - 1];
-					this.productos.forEach((producto) => {
-						if (producto.nombre === seleccionados.producto) {
-							return this.activos.push({
-								producto: producto,
-								codigo: seleccionados.codigo,
-							});
+				if (this.codigo === '' || this.producto === '') {
+					return Swal.fire('Error', 'Complete todos los campos', 'error');
+				} else {
+					let agregar = true;
+					this.items.forEach((item) => {
+						if (item.codigo === this.codigo) {
+							agregar = false;
 						}
 					});
-					return (this.codigo = '');
+					if (agregar) {
+						await this.items.push({ producto: this.producto, codigo: this.codigo });
+						const seleccionados = await this.items[this.items.length - 1];
+						this.productos.forEach((producto) => {
+							if (producto.nombre === seleccionados.producto) {
+								return this.activos.push({
+									producto: producto,
+									codigo: seleccionados.codigo,
+								});
+							}
+						});
+						return (this.codigo = '');
+					}
+					await Swal.fire(
+						'Error',
+						'Codigo de barras repetido, ya esta agregado',
+						'warning'
+					);
 				}
-				await Swal.fire(
-					'Error',
-					'Codigo de barras repetido, ya esta agregado',
-					'warning'
-				);
 			},
 			async registrarInvetario() {
 				try {
