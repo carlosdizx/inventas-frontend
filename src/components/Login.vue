@@ -1,61 +1,63 @@
 <template>
 	<validation-observer ref="observer" v-slot="{ invalid }">
 		<v-app class="mt-12">
-			<v-card class="mt-5 mx-auto">
-				<v-card-title>
-					<img
-						src="../assets/logo.png"
-						height="200"
-						width="245"
-						alt="logo"
-						class="mx-auto"
-					/>
-				</v-card-title>
-				<v-card-text>
-					<v-form @submit.prevent="submit">
-						<validation-provider v-slot="{ errors }" name="email" rules="required">
-							<v-text-field
-								v-model="userTemplate.username"
-								:error-messages="errors"
-								label="Nombre de usuario"
-								prepend-icon="mdi-account-circle"
-								required
+			<v-container>
+				<v-card class="mt-5 mx-auto" width="450">
+					<v-card-title>
+						<img
+							src="../assets/logo.png"
+							height="200"
+							width="245"
+							alt="logo"
+							class="mx-auto"
+						/>
+					</v-card-title>
+					<v-card-text>
+						<v-form @submit.prevent="submit">
+							<validation-provider v-slot="{ errors }" name="email" rules="required">
+								<v-text-field
+									v-model="userTemplate.username"
+									:error-messages="errors"
+									label="Nombre de usuario"
+									prepend-icon="mdi-account-circle"
+									required
+								>
+								</v-text-field>
+							</validation-provider>
+							<validation-provider
+								v-slot="{ errors }"
+								name="Contraseña"
+								rules="required|min:8|max:60"
 							>
-							</v-text-field>
-						</validation-provider>
-						<validation-provider
-							v-slot="{ errors }"
-							name="Contraseña"
-							rules="required|min:8|max:60"
-						>
-							<v-text-field
-								v-model="userTemplate.password"
-								type="password"
-								label="Contraseña"
-								:error-messages="errors"
-								name="input-10-1"
-								counter
-								prepend-icon="mdi-lock"
-								:type="showPassword ? 'text' : 'password'"
-								:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-								@click:append="showPassword = !showPassword"
-							>
-							</v-text-field>
-						</validation-provider>
-					</v-form>
-					<v-card-actions>
-						<v-btn
-							block
-							@click="submit"
-							role="link"
-							color="info"
-							type="submit"
-							:disabled="invalid"
-							>Iniciar sesion
-						</v-btn>
-					</v-card-actions>
-				</v-card-text>
-			</v-card>
+								<v-text-field
+									v-model="userTemplate.password"
+									type="password"
+									label="Contraseña"
+									:error-messages="errors"
+									name="input-10-1"
+									counter
+									prepend-icon="mdi-lock"
+									:type="showPassword ? 'text' : 'password'"
+									:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+									@click:append="showPassword = !showPassword"
+								>
+								</v-text-field>
+							</validation-provider>
+						</v-form>
+						<v-card-actions>
+							<v-btn
+								block
+								@click="submit"
+								role="link"
+								color="info"
+								type="submit"
+								:disabled="invalid"
+								>Iniciar sesion
+							</v-btn>
+						</v-card-actions>
+					</v-card-text>
+				</v-card>
+			</v-container>
 		</v-app>
 	</validation-observer>
 </template>
