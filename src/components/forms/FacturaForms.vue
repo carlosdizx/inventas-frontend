@@ -44,6 +44,7 @@
 							type="number"
 							label="Codigo del producto"
 							prepend-icon="mdi-barcode-scan"
+              v-on:keyup.13="agregarAlCarrito"
 						/>
 						<v-btn @click="agregarAlCarrito">
 							agregar producto
@@ -279,6 +280,7 @@
 									subTotal: producto.precioVenta,
 								});
 							}
+							this.codigoProducto = '';
 							await Swal.fire({
 								title: 'Agreado',
 								icon: 'success',
