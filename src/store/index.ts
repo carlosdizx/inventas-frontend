@@ -3,6 +3,7 @@ import Vuex, { Commit, createLogger } from 'vuex';
 import { LOGUEAR } from '@/services/auth';
 import router from '@/router';
 import {
+	ACTUALIZAR_ACTIVOS,
 	AGREGAR_CLIENTE,
 	AGREGAR_FACTURA,
 	AGREGAR_INVENTARIO,
@@ -131,6 +132,10 @@ export default new Vuex.Store({
 		listarActivos(): any {
 			const token: any = JSON.parse(<string>localStorage.getItem('token'));
 			return LISTAR_ACTIVOS(token.access_token);
+		},
+		actualizarActivos({ commit },activos: any): any {
+			const token: any = JSON.parse(<string>localStorage.getItem('token'));
+			return ACTUALIZAR_ACTIVOS(token.access_token, activos);
 		},
 	},
 	modules: {},

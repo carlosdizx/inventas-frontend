@@ -72,3 +72,10 @@ export const LISTAR_ACTIVOS = async (token: any) =>
 		},
 	});
 
+export const ACTUALIZAR_ACTIVOS = async (token: any,activos: any) =>
+	await INSTANCIA.put('/api/activos/update',activos, {
+		headers: {
+			Authorization: 'Bearer ' + token,
+		},
+	});
+

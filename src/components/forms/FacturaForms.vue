@@ -154,6 +154,7 @@
 				'listarClientes',
 				'listarActivos',
 				'agregarFactura',
+				'actualizarActivos',
 				'comprobarToken',
 			]),
 			async registrarFactura() {
@@ -172,6 +173,8 @@
 				if (typeof respuesta.data.Mensaje === 'string') {
 					return Swal.fire('Advertencia', `${respuesta.data.Mensaje}`, 'warning');
 				}
+				const resultado = await this.actualizarActivos(this.agregados);
+				console.log(resultado);
 				this.codigoProducto = null;
 				this.items = [];
 				this.comprados = [];
@@ -252,10 +255,7 @@
 							let existe = false;
 							await this.activos.forEach((activo) => {
 								if (activo.codigo === parseInt(this.codigoProducto)) {
-									this.agregados.push({
-										codigo: activo.codigo,
-										producto: activo.producto,
-									});
+									this.agregados.push(activo);
 								}
 							});
 							const producto = this.agregados[this.agregados.length - 1].producto;
