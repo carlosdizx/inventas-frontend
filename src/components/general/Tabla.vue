@@ -10,7 +10,9 @@
 			</thead>
 			<tbody>
 				<tr v-for="item in filas">
-					<td v-for="valor in Object.values(item)">{{ valor }}</td>
+					<td v-for="valor in Object.values(item)">{{
+						typeof valor === 'number' ? new Intl.NumberFormat().format(valor) : valor
+					}}</td>
 				</tr>
 			</tbody>
 		</template>

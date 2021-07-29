@@ -50,7 +50,13 @@
 								:error-messages="errors"
 								counter
 							/>
-              <v-alert>{{ venta | toUSD }}</v-alert>
+							<v-alert
+								dense
+								dark
+								:color="compra > venta ? 'red' : compra < venta ? 'success' : 'orange'"
+							>
+								{{ venta | toUSD }}
+							</v-alert>
 						</validation-provider>
 					</v-form>
 				</v-card-text>
@@ -114,7 +120,7 @@
 		methods: {
 			...mapActions(['comprobarToken', 'agregarProducto']),
 			async registrarProducto() {
-				if (this.precioCompra >= this.precioVenta) {
+				if (this.compra > this.venta) {
 					return await Swal.fire(
 						'El precio de compra/produccion debe ser mayor al precio de venta'
 					);
