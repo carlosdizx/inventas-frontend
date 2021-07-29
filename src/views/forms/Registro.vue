@@ -15,9 +15,11 @@
 				<v-icon>{{ tab }}</v-icon>
 			</v-tab>
 		</v-tabs>
-		<ProductoForm v-if="index === 1" />
-		<ClienteForm v-if="index === 2" />
-		<InventarioForm v-if="index === 3" />
+		<v-card max-width="1000">
+			<ProductoForm v-if="index === 1" />
+			<ClienteForm v-if="index === 2" />
+			<InventarioForm v-if="index === 3" />
+		</v-card>
 	</v-card>
 </template>
 
