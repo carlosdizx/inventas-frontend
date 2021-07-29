@@ -34,6 +34,7 @@
 								:error-messages="errors"
 								counter
 							/>
+							<v-alert>{{ compra | toUSD }}</v-alert>
 						</validation-provider>
 						<validation-provider
 							v-slot="{ errors }"
@@ -49,6 +50,7 @@
 								:error-messages="errors"
 								counter
 							/>
+              <v-alert>{{ venta | toUSD }}</v-alert>
 						</validation-provider>
 					</v-form>
 				</v-card-text>
@@ -112,42 +114,48 @@
 		methods: {
 			...mapActions(['comprobarToken', 'agregarProducto']),
 			async registrarProducto() {
-				const producto = {
-					nombre: this.nombre,
-					precioCompra: this.compra,
-					precioVenta: this.venta,
-				};
-				try {
-					const respuesta = await this.agregarProducto(producto);
-					if (typeof respuesta.data.Mensaje === 'string') {
-						return await Swal.fire('Alerta', `${respuesta.data.Mensaje}`, 'info');
-					}
-					this.nombre = '';
-					this.compra = null;
-					this.venta = null;
+				if (this.precioCompra >= this.precioVenta) {
 					return await Swal.fire(
-						'Registro exitoso',
-						'Se registro el producto 👌😎',
-						'success'
+						'El precio de compra/produccion debe ser mayor al precio de venta'
 					);
-				} catch (e) {
-					await Swal.fire(
-						'Error',
-						`Asegurarte de que el producto/servicio no este registrado
+				} else {
+					const producto = {
+						nombre: this.nombre,
+						precioCompra: this.compra,
+						precioVenta: this.venta,
+					};
+					try {
+						const respuesta = await this.agregarProducto(producto);
+						if (typeof respuesta.data.Mensaje === 'string') {
+							return await Swal.fire('Alerta', `${respuesta.data.Mensaje}`, 'info');
+						}
+						this.nombre = '';
+						this.compra = null;
+						this.venta = null;
+						return await Swal.fire(
+							'Registro exitoso',
+							'Se registro el producto 👌😎',
+							'success'
+						);
+					} catch (e) {
+						await Swal.fire(
+							'Error',
+							`Asegurarte de que el producto/servicio no este registrado
                 <br/> el nombre debe ser unico
                 <br/>
                 ${e.message}`,
-						'error'
-					);
+							'error'
+						);
+					}
 				}
 			},
 		},
-    async created() {
-      try {
-        await this.comprobarToken();
-      } catch (e) {
-        console.log('No se pudo comprobar el token');
-      }
-    },
+		async created() {
+			try {
+				await this.comprobarToken();
+			} catch (e) {
+				console.log('No se pudo comprobar el token');
+			}
+		},
 	};
 </script>
